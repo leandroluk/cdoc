@@ -1,0 +1,72 @@
+pre-commit:
+  commands:
+    prettier:
+      run: yarn lint
+
+prepare-commit-msg:
+  scripts:
+    fix-all-package-json:
+      runner: node
+      script: |
+        const fs = require('fs');
+        const path = require('path');
+
+        const rootPackageJson = Object
+          .entries(require('./package.json'))
+          .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+          .reduce((obj, [key, value]) => ({...obj, [key]: value}), {});
+
+        fs.writeFileSync('./package.json', JSON.stringify(rootPackageJson, null, 2), 'utf8')
+
+        for (const workspaceDir of rootPackageJson.workspaces) {
+          const workspacePackageJsonPath = path.resolve(workspaceDir, 'package.json');
+          const workspacePackageJson = Object
+            .entries(require(workspacePackageJsonPath))
+            .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+            .reduce((obj, [key, value]) => ({...obj, [key]: value}), {});
+          workspacePackageJson.name = `@${rootPackageJson.name}/${workspaceDir}`;
+          workspacePackageJson.version = rootPackageJson.version;
+          workspacePackageJson.displayName = rootPackageJson.displayName;
+          workspacePackageJson.description = rootPackageJson.description;
+          workspacePackageJson.homepage = rootPackageJson.homepage;
+          workspacePackageJson.author = rootPackageJson.author;
+          workspacePackageJson.tenant = rootPackageJson.tenant;
+          workspacePackageJson.engines = rootPackageJson.engines;
+
+          fs.writeFileSync(workspacePackageJsonPath, JSON.stringify(workspacePackageJson, null, 2), 'utf8');
+        }
+
+    add-branch-prefix:
+      runner: node
+      script: |
+        const { execSync } = require('child_process');
+        const fs = require('fs');
+
+        // Get the current branch name
+        let branchName;
+        try {
+          branchName = execSync('git symbolic-ref --short HEAD', { encoding: 'utf8' }).trim();
+        } catch (err) {
+          branchName = 'unknown-branch';
+        }
+
+        // File path to commit message
+        const commitMsgFile = process.argv[2];
+
+        // Read the existing commit message
+        const commitMsg = fs.readFileSync(commitMsgFile, 'utf8');
+
+        // Add the name of the branch that has not started, if it is not present
+        if (!commitMsg.startsWith(`${branchName} - `)) {
+          fs.writeFileSync(commitMsgFile, `${branchName} - ${commitMsg}`);
+        }
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit
+
+pre-push:
+  commands:
+    lint_and_tsc: 
+      run: yarn lint && yarn tsc

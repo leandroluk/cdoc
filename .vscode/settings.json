@@ -1,0 +1,73 @@
+{
+  // editor
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "eslint.format.enable": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.removeUnusedImports": "always",
+    "source.sortImports": "always",
+    "source.addMissingImports.ts": "always",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.ts": "always",
+    "source.organizeLinkDefinitions": "always",
+    "source.removeUnused.ts": "always"
+  },
+  "editor.rulers": [
+    80,
+    100,
+    120
+  ],
+  // eslint
+  "eslint.useFlatConfig": true,
+  "eslint.codeActionsOnSave.mode": "all",
+  "eslint.enable": true,
+  "editor.semanticHighlighting.enabled": true,
+  // files
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.insertFinalNewline": false,
+  "files.trimFinalNewlines": true,
+  "files.associations": {
+    ".env*": "shellscript",
+  },
+  // docker
+  "[dockercompose]": {
+    "editor.formatOnSave": false
+  },
+  // git
+  "git.inputValidation": false,
+  // jestrunner
+  "jestrunner.runOptions": [
+    "--testTimeout=999999",
+    "--detectOpenHandles"
+  ],
+  // javascript
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+  "javascript.preferences.importModuleSpecifier": "shortest",
+  "javascript.suggestionActions.enabled": false,
+  "javascript.preferences.quoteStyle": "single",
+  // typescript
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": false,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.suggestionActions.enabled": false,
+  "typescript.preferences.quoteStyle": "single",
+  // css
+  "css.lint.unknownAtRules": "ignore",
+  // barrelr
+  "barrelr.lineEnding": "LF",
+  "barrelr.useDoubleQuotes": false,
+  "barrelr.useSemiColons": true,
+  // icons 
+}

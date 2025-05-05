@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // backend
+    {
+      "name": "backend",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/backend",
+      "command": "yarn dev",
+      "outputCapture": "std",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    // domain
+    {
+      "name": "domain",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/domain",
+      "command": "yarn build",
+      "outputCapture": "std",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    // frontend
+    {
+      "name": "frontend",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "cwd": "${workspaceFolder}/frontend",
+      "outputCapture": "std"
+    },
+    // file
+    {
+      "name": "file",
+      "program": "${file}",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    }
+  ],
+  "compounds": []
+}
