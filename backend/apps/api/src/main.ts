@@ -27,13 +27,14 @@ export async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  const url = `/${[appEnv.prefix, 'log'].filter(Boolean).join('/')}`;
+  const logUrl = `/${[appEnv.prefix, 'system', 'log'].filter(Boolean).join('/')}`;
 
   SwaggerModule.setup(appEnv.prefix, app, document, {
-    customJsStr: `new EventSource('${url}').onmessage = e => console.log(e.data)`,
+    customJsStr: `new EventSource('${logUrl}').onmessage = e => console.log(e.data)`,
   });
 
   await app.listen(appEnv.port);
+
   loggerService.log(`✅ started on port ${appEnv.port}`, 'bootstrap');
 }
 bootstrap(); // eslint-disable-line @typescript-eslint/no-floating-promises
