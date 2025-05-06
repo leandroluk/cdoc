@@ -5,23 +5,23 @@ import {GreendocsProjectEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {Page} from 'puppeteer';
 import {DataSource} from 'typeorm';
-import {AppEnv} from '../app.env';
+import {ExtractorEnv} from '../extractor.env';
 import {AbstractWorker} from '../generics';
 
 @Injectable()
 export class ProjectWorker extends AbstractWorker {
   readonly projectListSelector = '#lista_projetos .item_menu [onclick]';
   readonly cdocSelector = '[title="CDOC"]';
-  readonly overwriteFields: Array<string & keyof TGreendocsProject> = [
+  readonly overwriteFields: Array<keyof TGreendocsProject> = [
     'name',
     'submenuSelector',
     'suppliersViewLink',
     'reserveViewLink',
   ];
-  readonly conflictTarget: Array<string & keyof TGreendocsProject> = ['id'];
+  readonly conflictTarget: Array<keyof TGreendocsProject> = ['id'];
 
   constructor(
-    appEnv: AppEnv,
+    appEnv: ExtractorEnv,
     page: Page,
     readonly dataSource: DataSource,
     readonly loggerService: LoggerService

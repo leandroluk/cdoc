@@ -1,12 +1,12 @@
-import {FactoryProvider} from '@nestjs/common';
+import {type FactoryProvider} from '@nestjs/common';
 import puppeteer, {Browser} from 'puppeteer';
-import {AppEnv} from '../app.env';
+import {ExtractorEnv} from '../extractor.env';
 
 export const browserFactory: FactoryProvider<Browser> = {
   provide: Browser,
   durable: true,
-  inject: [AppEnv],
-  async useFactory(appEnv: AppEnv) {
+  inject: [ExtractorEnv],
+  async useFactory(appEnv: ExtractorEnv) {
     const browser = await puppeteer.launch({
       headless: appEnv.headless,
       args: ['--start-fullscreen'],

@@ -1,12 +1,12 @@
 import {Retry, TimeTrack} from 'libs/common';
 import {Page} from 'puppeteer';
-import {AppEnv} from '../app.env';
+import {ExtractorEnv} from '../extractor.env';
 
 export abstract class AbstractWorker {
   readonly cacheKey = 'scrapper';
 
   constructor(
-    protected readonly appEnv: AppEnv,
+    protected readonly appEnv: ExtractorEnv,
     protected readonly page: Page
   ) {}
 

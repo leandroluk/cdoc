@@ -1,4 +1,4 @@
-import {FactoryProvider} from '@nestjs/common';
+import {type FactoryProvider} from '@nestjs/common';
 import {LoggerService} from 'libs/logger';
 import {DataSource} from 'typeorm';
 import {DatabaseEnv} from '../database.env';

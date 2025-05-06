@@ -1,15 +1,15 @@
-import {GreendocsProjectEntity} from '#/shared/database';
-import {LoggerService} from '#/shared/logger';
 import {TGreendocsProject} from '@cdoc/domain';
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {Cron, CronExpression} from '@nestjs/schedule';
 import {subDays, subHours} from 'date-fns';
+import {GreendocsProjectEntity} from 'libs/database';
+import {LoggerService} from 'libs/logger';
 import {DataSource, IsNull, LessThan, MoreThan, Not, Or} from 'typeorm';
 import * as workers from './workers';
 
 @Injectable()
-export class ScrapperOrchestrator implements OnApplicationBootstrap {
+export class ExtractorOrchestrator implements OnApplicationBootstrap {
   constructor(
     protected readonly moduleRef: ModuleRef,
     protected readonly loggerService: LoggerService,

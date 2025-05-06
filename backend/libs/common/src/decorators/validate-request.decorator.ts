@@ -1,15 +1,15 @@
 import {
   BadRequestException,
-  CallHandler,
-  ExecutionContext,
-  NestInterceptor,
+  type CallHandler,
+  type ExecutionContext,
+  type NestInterceptor,
   UseInterceptors,
   applyDecorators,
 } from '@nestjs/common';
 import {ApiBadRequestResponse} from '@nestjs/swagger';
-import {Request} from 'express';
-import Joi from 'joi';
-import {Observable} from 'rxjs';
+import {type Request} from 'express';
+import type Joi from 'joi';
+import {type Observable} from 'rxjs';
 
 export function ValidateRequest<T extends Partial<Request> = Partial<Request>>(
   schema: Joi.ObjectSchema<T>

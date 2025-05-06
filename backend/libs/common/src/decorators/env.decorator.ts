@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import Joi from 'joi';
+import type Joi from 'joi';
 
 dotenvExpand.expand(dotenv.config());
 

@@ -7,7 +7,7 @@ import {CommonEnv} from '../common.env';
 export class CorsMiddleware implements NestMiddleware {
   constructor(private readonly commonEnv: CommonEnv) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction): void {
     const origin = req.headers.origin;
 
     res.header('Access-Control-Allow-Credentials', 'true');

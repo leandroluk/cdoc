@@ -4,7 +4,7 @@ import {Retry, TimeTrack} from 'libs/common';
 import {GreendocsProjectEntity, GreendocsSupplierEntity} from 'libs/database';
 import {Page} from 'puppeteer';
 import {DataSource} from 'typeorm';
-import {AppEnv} from '../app.env';
+import {ExtractorEnv} from '../extractor.env';
 import {AbstractWorker} from '../generics';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class SupplierWorker extends AbstractWorker {
   readonly paginationSelector = 'select#PaginarPor';
   readonly instanceHeaderSelector = '#acoes_Objeto';
   readonly instanceContentSelector = '#conteudo_instancia form #infoBasica';
-  readonly overwriteFields: Array<string & keyof TGreendocsSupplier> = [
+  readonly overwriteFields: Array<keyof TGreendocsSupplier> = [
     'link',
     'name',
     'supplierName',
@@ -26,10 +26,10 @@ export class SupplierWorker extends AbstractWorker {
     'responsible',
     'greendocsProjectId',
   ];
-  readonly conflictTarget: Array<string & keyof TGreendocsSupplier> = ['id'];
+  readonly conflictTarget: Array<keyof TGreendocsSupplier> = ['id'];
 
   constructor(
-    appEnv: AppEnv,
+    appEnv: ExtractorEnv,
     page: Page,
     protected readonly dataSource: DataSource
   ) {

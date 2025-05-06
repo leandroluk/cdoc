@@ -1,22 +1,22 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule, Provider} from '@nestjs/common';
 import {ScheduleModule} from '@nestjs/schedule';
-import {CorsMiddleware} from 'libs/common/middlewares';
-import {DatabaseModule} from 'libs/database';
-import {LoggerModule} from 'libs/logger';
+import {CommonModule, CorsMiddleware} from 'libs/common';
 import {AppEnv} from './app.env';
+import {ResourceModule} from './resource';
 
 @Module({
   imports: [
     // external imports
     ScheduleModule.forRoot(),
+    // libs imports
+    CommonModule,
     // internal imports
-    DatabaseModule,
-    LoggerModule,
+    ResourceModule,
   ],
-  providers: [AppEnv],
+  providers: Array<Provider>().concat(AppEnv),
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer): void {
     consumer.apply(CorsMiddleware).forRoutes('*');
   }
 }

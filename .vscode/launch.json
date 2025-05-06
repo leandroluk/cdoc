@@ -1,6 +1,18 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // backend greendocs-extractor
+    {
+      "name": "backend:greendocs-extractor",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/backend",
+      "command": "yarn dev apps-greendocs-extractor",
+      "outputCapture": "std",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
     // backend
     {
       "name": "backend",

@@ -3,7 +3,8 @@ import {type OpenAPIV3} from 'openapi-types';
 export const TSwagger = {
   object: <T extends object>(
     data?: ISwagger.RequiredObject<T> //
-  ): {type: 'object'} & ISwagger.RequiredObject<T> => ({type: 'object', ...data}) as {type: 'object'} & ISwagger.RequiredObject<T>,
+  ): {type: 'object'} & ISwagger.RequiredObject<T> =>
+    ({type: 'object', ...data}) as {type: 'object'} & ISwagger.RequiredObject<T>,
 
   array: <T extends object>(
     data?: Omit<OpenAPIV3.ArraySchemaObject, 'type' | 'items'> & {

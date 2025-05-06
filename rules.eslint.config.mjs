@@ -1,16 +1,7 @@
 // @ts-check
-import js from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import typescriptEslint from 'typescript-eslint';
 
 /** @type {import("eslint").Linter.Config['rules']} */
 export default {
-  ...js.configs.recommended.rules,
-  ...typescriptEslint.configs.recommendedTypeChecked.reduce((obj, item) => ({
-    ...obj,
-    rules: {...obj.rules, ...item.rules}
-  }), {}).rules,
-  ...eslintPluginPrettierRecommended.rules,
   //#region @typescript-eslint
   '@typescript-eslint/no-floating-promises': 'error',
   '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -26,8 +17,10 @@ export default {
   '@typescript-eslint/no-warning-comments': 'off',
   '@typescript-eslint/no-unsafe-argument': 'off',
   '@typescript-eslint/no-empty-function': 'off',
+  '@typescript-eslint/no-unsafe-return': 'off',
   '@typescript-eslint/no-var-requires': 'off',
   '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/no-unsafe-call': 'off',
   '@typescript-eslint/require-await': 'off',
   '@typescript-eslint/no-namespace': 'off',
   '@typescript-eslint/ban-types': 'off',

@@ -1,15 +1,24 @@
 // @ts-check
+import js from '@eslint/js';
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintPluginN from 'eslint-plugin-n';
 import eslinPluginPrettier from 'eslint-plugin-prettier';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import workspaceEslintRules from '../workspace.eslint.config.mjs';
+import rulesEslintConfig from '../rules.eslint.config.mjs';
 
 export default tseslint.config(
   /** @type {import("eslint").Linter.Config} */
   {
-    ignores: ['dist', 'eslint.config.mjs', '.prettierrc.js'],
+    files: ["**/*.ts", "**/*.js", "**/*.cts", "**.*.mts"],
+  },
+  /** @type {import("eslint").Linter.Config} */
+  {
+    ignores: ['eslint.config.mjs'],
+  },
+  /** @type {import("eslint").Linter.Config} */
+  {
     languageOptions: {
       globals: {
         ...globals.node,
@@ -22,17 +31,26 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
         warnOnUnsupportedTypeScriptVersion: false,
       },
-    },
+    }
+  },
+  /** @type {import("eslint").Linter.Config} */
+  {
     plugins: {
       n: eslintPluginN,
       prettier: eslinPluginPrettier,
       '@typescript-eslint': typescriptEslintPlugin,
     },
+  },
+  /** @type {import("eslint").Linter.Config} */
+  {
     rules: {
-      ...workspaceEslintRules,
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
-    },
+      ...js.configs.recommended.rules,
+      ...eslintPluginPrettierRecommended.rules,
+      ...tseslint.configs.recommendedTypeChecked.reduce((obj, item) => ({
+        ...obj,
+        rules: {...obj.rules, ...item.rules}
+      }), {}).rules,
+      ...rulesEslintConfig,
+    }
   }
 );
