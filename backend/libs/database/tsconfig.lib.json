@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../.tmp/dist/libs/database"
+    "outDir": "../../dist/libs/database"
   },
   "include": [
     "src/**/*"

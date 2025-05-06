@@ -15,7 +15,7 @@ export default tseslint.config(
   },
   /** @type {import("eslint").Linter.Config} */
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs', 'webpack.config.js'],
   },
   /** @type {import("eslint").Linter.Config} */
   {

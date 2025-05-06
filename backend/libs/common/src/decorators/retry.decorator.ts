@@ -6,7 +6,7 @@ export function Retry(retries = 10, delayMs = 1000): MethodDecorator {
     descriptor.value = async function (...args: any[]): Promise<any> {
       let attempts = 0;
       const loggerService = new LoggerService(`${target.constructor.name}.${String(propertyKey)}`);
-      for (let attempt = 1; attempt <= retries; attempt + 1) {
+      for (let attempt = 1; attempt <= retries; attempt += 1) {
         try {
           return await originalMethod.apply(this, args);
         } catch (error) {

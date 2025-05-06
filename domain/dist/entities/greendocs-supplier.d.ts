@@ -37,4 +37,29 @@ export declare namespace TGreendocsSupplier {
         /** @type {Project(id)} */
         greendocsProjectId: TGreendocsProject['id'];
     };
+    const swagger: {
+        type: "object";
+    } & import("openapi-types").OpenAPIV3.BaseSchemaObject & {
+        required: ("updatedAt" | "removedAt" | "createdAt" | keyof Fields | "greendocsProjectId")[];
+        properties: {
+            updatedAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            createdAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            removedAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            id: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            instanceId: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            link: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            name: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            supplierName: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            address: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            city: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            state: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            zipCode: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            email: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            phone: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            responsible: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            inAttentionBy: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            situation: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            greendocsProjectId: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+        };
+    };
 }

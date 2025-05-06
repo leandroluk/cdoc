@@ -32,6 +32,30 @@
     "paths": {
       "#/*": [
         "src/*"
+      ],
+      "@app/mailer": [
+        "libs/mailer/src"
+      ],
+      "@app/mailer/*": [
+        "libs/mailer/src/*"
+      ],
+      "@app/session": [
+        "libs/session/src"
+      ],
+      "@app/session/*": [
+        "libs/session/src/*"
+      ],
+      "@app/storage": [
+        "libs/storage/src"
+      ],
+      "@app/storage/*": [
+        "libs/storage/src/*"
+      ],
+      "@app/stream": [
+        "libs/stream/src"
+      ],
+      "@app/stream/*": [
+        "libs/stream/src/*"
       ]
     }
   },

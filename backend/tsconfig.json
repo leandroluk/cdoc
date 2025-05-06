@@ -21,11 +21,23 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
     "paths": {
+      "libs/cache": [
+        "libs/cache/src"
+      ],
+      "libs/cache/*": [
+        "libs/cache/src/*"
+      ],
       "libs/common": [
         "libs/common/src"
       ],
       "libs/common/*": [
         "libs/common/src/*"
+      ],
+      "libs/crypto": [
+        "libs/crypto/src"
+      ],
+      "libs/crypto/*": [
+        "libs/crypto/src/*"
       ],
       "libs/database": [
         "libs/database/src"
@@ -38,6 +50,30 @@
       ],
       "libs/logger/*": [
         "libs/logger/src/*"
+      ],
+      "libs/mailer": [
+        "libs/mailer/src"
+      ],
+      "libs/mailer/*": [
+        "libs/mailer/src/*"
+      ],
+      "libs/session": [
+        "libs/session/src"
+      ],
+      "libs/session/*": [
+        "libs/session/src/*"
+      ],
+      "libs/storage": [
+        "libs/storage/src"
+      ],
+      "libs/storage/*": [
+        "libs/storage/src/*"
+      ],
+      "libs/stream": [
+        "libs/stream/src"
+      ],
+      "libs/stream/*": [
+        "libs/stream/src/*"
       ],
       "package.json": [
         "./package.json"

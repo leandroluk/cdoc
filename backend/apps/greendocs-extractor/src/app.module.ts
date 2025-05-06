@@ -2,7 +2,7 @@ import {MiddlewareConsumer, Module, NestModule, Provider} from '@nestjs/common';
 import {ScheduleModule} from '@nestjs/schedule';
 import {CommonModule, CorsMiddleware} from 'libs/common';
 import {AppEnv} from './app.env';
-import {ResourceModule} from './resource';
+import {ResourcesModule} from './resources';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import {ResourceModule} from './resource';
     // libs imports
     CommonModule,
     // internal imports
-    ResourceModule,
+    ResourcesModule,
   ],
   providers: Array<Provider>().concat(AppEnv),
 })

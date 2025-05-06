@@ -20,7 +20,8 @@ export class CorsMiddleware implements NestMiddleware {
         res.header('Access-Control-Allow-Origin', origin);
       } else {
         if (req.method === 'OPTIONS') {
-          return res.status(403).end('Unauthorized origin');
+          res.status(403).end('Unauthorized origin');
+          return;
         }
       }
     } else {
@@ -28,7 +29,8 @@ export class CorsMiddleware implements NestMiddleware {
     }
 
     if (req.method === 'OPTIONS') {
-      return res.sendStatus(204);
+      res.sendStatus(204);
+      return;
     }
 
     next();

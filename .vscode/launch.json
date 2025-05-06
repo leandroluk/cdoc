@@ -1,6 +1,18 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // backend api
+    {
+      "name": "backend:api",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/backend",
+      "command": "yarn dev apps-api",
+      "outputCapture": "std",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
     // backend greendocs-extractor
     {
       "name": "backend:greendocs-extractor",
@@ -8,18 +20,6 @@
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/backend",
       "command": "yarn dev apps-greendocs-extractor",
-      "outputCapture": "std",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
-    },
-    // backend
-    {
-      "name": "backend",
-      "request": "launch",
-      "type": "node-terminal",
-      "cwd": "${workspaceFolder}/backend",
-      "command": "yarn dev",
       "outputCapture": "std",
       "skipFiles": [
         "<node_internals>/**"

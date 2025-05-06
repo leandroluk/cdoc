@@ -18,4 +18,21 @@ export declare namespace TGreendocsProject {
         /** @type {NULL | URL} */
         reserveViewLink: null | string;
     };
+    const swagger: {
+        type: "object";
+    } & import("openapi-types").OpenAPIV3.BaseSchemaObject & {
+        required: ("updatedAt" | "removedAt" | "createdAt" | keyof Fields)[];
+        properties: {
+            updatedAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            createdAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            removedAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            id: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            link: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            name: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            submenuSelector: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            suppliersExtractionAt: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            suppliersViewLink: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+            reserveViewLink: import("openapi-types").OpenAPIV3.NonArraySchemaObject;
+        };
+    };
 }

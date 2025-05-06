@@ -14,7 +14,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TSwagger = void 0;
 exports.TSwagger = {
     object: function (data //
-    ) { return (__assign({ type: 'object' }, data)); },
+    ) {
+        return (__assign({ type: 'object' }, data));
+    },
     array: function (data) { return (__assign({ type: 'array' }, data)); },
     boolean: function (data //
     ) { return (__assign({ type: 'boolean' }, data)); },

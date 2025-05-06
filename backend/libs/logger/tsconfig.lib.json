@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../.tmp/dist/libs/logger"
+    "outDir": "../../dist/libs/logger"
   },
   "include": [
     "src/**/*"
