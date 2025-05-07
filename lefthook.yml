@@ -68,5 +68,5 @@ commit-msg:
 
 pre-push:
   commands:
-    lint_and_tsc: 
+    lint_and_tsc:
       run: yarn lint && yarn tsc

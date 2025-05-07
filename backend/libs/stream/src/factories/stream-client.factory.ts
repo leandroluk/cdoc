@@ -12,10 +12,9 @@ export const streamClientFactory: FactoryProvider<Redis> = {
     try {
       const client = new Redis(streamEnv.connectionString, {lazyConnect: true});
       await client.connect();
-      loggerService.log('Connected.');
       return client;
     } catch (error) {
-      this.loggerService.log('Failed to connect', error);
+      loggerService.log('Failed to connect', error);
       throw error;
     }
   },

@@ -2,17 +2,16 @@ import {TLoginAuthCredential, TOtp, TUser, type TCredential} from '@cdoc/domain'
 import {Injectable, NotAcceptableException, UnauthorizedException} from '@nestjs/common';
 import {CommonEnv} from 'libs/common';
 import {CryptoService} from 'libs/crypto';
-import {UserEntity} from 'libs/database';
+import {DatabaseService, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
 import {StreamService, UserOtpUpdatedEvent} from 'libs/stream';
 import ms from 'ms';
-import {DataSource} from 'typeorm';
 
 @Injectable()
 export class LoginAuthCredentialService implements TLoginAuthCredential {
   constructor(
     private readonly commonEnv: CommonEnv,
-    private readonly dataSource: DataSource,
+    private readonly databaseService: DatabaseService,
     private readonly cryptoService: CryptoService,
     private readonly streamService: StreamService,
     private readonly sessionService: SessionService
@@ -21,7 +20,7 @@ export class LoginAuthCredentialService implements TLoginAuthCredential {
   protected async getUserAndRelations(
     email: TUser['email']
   ): Promise<{user: TUser; credential: TCredential; otp: TOtp} | undefined> {
-    const userWithRelations = await this.dataSource
+    const userWithRelations = await this.databaseService
       .getRepository(UserEntity)
       .findOne({where: {email}, relations: {Credential: true, Otp: true}});
     if (userWithRelations) {

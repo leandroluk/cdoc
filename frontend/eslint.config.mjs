@@ -7,17 +7,18 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import rulesEslintConfig from '../rules.eslint.config.mjs';
 
 export default tseslint.config(
-  /** @type {import("eslint").Linter.Config} */
+  /** ignores @type {import("eslint").Linter.Config} */
   {
-    ignores: ['dist', 'eslint.config.mjs']
+    ignores: ['dist', 'eslint.config.mjs', 'tailwind.config.js'],
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** files @type {import("eslint").Linter.Config} */
   {
     files: ['**/*.{ts,tsx}'],
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** languageOptions @type {import("eslint").Linter.Config} */
   {
     languageOptions: {
       ecmaVersion: 2020,
@@ -31,7 +32,7 @@ export default tseslint.config(
       },
     },
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** plugins @type {import("eslint").Linter.Config} */
   {
     plugins: {
       n: eslintPluginN,
@@ -41,18 +42,27 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
     },
   },
+  /** rules @type {import("eslint").Linter.Config} */
   {
     rules: {
       ...js.configs.recommended.rules,
-      ...tseslint.configs.recommendedTypeChecked.reduce((obj, item) => ({
-        ...obj,
-        rules: {...obj.rules, ...item.rules}
-      }), {}).rules,
+      ...tseslint.configs.recommendedTypeChecked.reduce(
+        (obj, item) => ({
+          ...obj,
+          rules: {...obj.rules, ...item.rules},
+        }),
+        {}
+      ).rules,
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        {allowConstantExport: true},
-      ],
+      'react-refresh/only-export-components': ['warn', {allowConstantExport: true}],
+      ...rulesEslintConfig,
     },
   },
-)
+  /** overrides @type {import("eslint").Linter.Config} */
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
+    },
+  }
+);

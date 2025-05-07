@@ -1,15 +1,15 @@
 import {TOtp, TRecoverAuth, TUser, type TCredential} from '@cdoc/domain';
 import {Injectable, NotAcceptableException, NotFoundException} from '@nestjs/common';
 import {CryptoService} from 'libs/crypto';
-import {CredentialEntity, UserEntity} from 'libs/database';
+import {CredentialEntity, DatabaseService, UserEntity} from 'libs/database';
 import {StreamService, UserCredentialUpdatedEvent} from 'libs/stream';
-import {DataSource, EntityManager} from 'typeorm';
+import {EntityManager} from 'typeorm';
 
 @Injectable()
 export class RecoverAuthService implements TRecoverAuth {
   constructor(
     private readonly cryptoService: CryptoService,
-    private readonly dataSource: DataSource,
+    private readonly databaseService: DatabaseService,
     private readonly streamService: StreamService
   ) {}
 
@@ -42,7 +42,7 @@ export class RecoverAuthService implements TRecoverAuth {
   }
 
   async run(data: TRecoverAuth.Data): Promise<void> {
-    await this.dataSource.transaction(async entityManager => {
+    await this.databaseService.transaction(async entityManager => {
       const {user, credential, otp} = await this.getUserWithRelations(entityManager, data.body.email);
       if (otp.code !== data.body.code || otp.expiresAt < new Date()) {
         throw new NotAcceptableException('Invalid token');

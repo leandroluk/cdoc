@@ -79,4 +79,4 @@ export default {
   eqeqeq: 'error',
   quotes: ['warn', 'single', {avoidEscape: true}],
   //#endregion
-}
+};

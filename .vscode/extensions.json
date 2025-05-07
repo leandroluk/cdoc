@@ -6,8 +6,8 @@
     "vscode-icons-team.vscode-icons",
     // Integrates ESLint JavaScript into VS Code.
     "dbaeumer.vscode-eslint",
-    // Supercharge Git within VS Code — Visualize code authorship at a glance via Git blame annotations and CodeLens, 
-    // seamlessly navigate and explore Git repositories, gain valuable insights via rich visualizations and powerful 
+    // Supercharge Git within VS Code — Visualize code authorship at a glance via Git blame annotations and CodeLens,
+    // seamlessly navigate and explore Git repositories, gain valuable insights via rich visualizations and powerful
     // comparison commands, and so much more
     "eamodio.gitlens",
     // Makes it easy to create, manage, and debug containerized applications.
@@ -27,7 +27,7 @@
     // Barreler for typescript apps
     "mikerhyssmith.ts-barrelr",
     // Markdown syntax support for the Mermaid charting language
-    "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+    "bpruitt-goddard.mermaid-markdown-syntax-highlighting"
   ],
   "unwantedRecommendations": [
     // Code formatter using prettier

@@ -15,11 +15,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./credential"), exports);
-__exportStar(require("./greendocs-project"), exports);
-__exportStar(require("./greendocs-supplier"), exports);
 __exportStar(require("./imap-email"), exports);
 __exportStar(require("./otp"), exports);
 __exportStar(require("./profile"), exports);
+__exportStar(require("./project"), exports);
 __exportStar(require("./sso"), exports);
+__exportStar(require("./supplier"), exports);
 __exportStar(require("./user"), exports);
 //# sourceMappingURL=index.js.map

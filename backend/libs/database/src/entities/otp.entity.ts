@@ -1,28 +1,29 @@
 import {TOtp} from '@cdoc/domain';
 import {Column, JoinColumn, OneToOne} from 'typeorm';
+import {uuidv7} from 'uuidv7';
 import {FullTextEntity, IndexableColumn, UpdatableColumn} from '../decorators';
 import {UserEntity} from './user.entity';
 
 @FullTextEntity<TOtp>({name: 'otp'})
 export class OtpEntity implements TOtp {
   @IndexableColumn()
-  id!: string;
+  id: string = uuidv7();
 
   @UpdatableColumn()
-  updatedAt!: Date;
+  updatedAt: Date = new Date();
 
   @Column({name: 'expires_at', type: 'timestamptz', precision: 3})
-  expiresAt!: Date;
+  expiresAt: Date;
 
   @Column({name: 'code', type: 'char', length: 6})
-  code!: string;
+  code: string;
 
   @Column({name: 'user_id', type: 'uuid'})
-  userId!: string;
+  userId: string;
 
   //--
 
   @OneToOne(() => UserEntity, _ => _.Otp, {cascade: true})
   @JoinColumn({name: 'user_id', referencedColumnName: 'id'})
-  User!: UserEntity;
+  User: UserEntity;
 }

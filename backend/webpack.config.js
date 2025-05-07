@@ -16,9 +16,9 @@ module.exports = config => {
       },
     ],
     plugins: [
-      ...config.plugins ?? [],
+      ...(config.plugins ?? []),
       new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
       new webpack.IgnorePlugin({resourceRegExp: /^cloudflare:sockets$/}),
-    ]
-  }
-}
+    ],
+  };
+};

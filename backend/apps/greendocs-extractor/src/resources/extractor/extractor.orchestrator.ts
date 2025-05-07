@@ -1,11 +1,11 @@
-import {TGreendocsProject} from '@cdoc/domain';
+import {TProject} from '@cdoc/domain';
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {Cron, CronExpression} from '@nestjs/schedule';
 import {subDays, subHours} from 'date-fns';
-import {GreendocsProjectEntity} from 'libs/database';
+import {DatabaseService, ProjectEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
-import {DataSource, IsNull, LessThan, MoreThan, Not, Or} from 'typeorm';
+import {IsNull, LessThan, MoreThan, Not, Or} from 'typeorm';
 import * as workers from './workers';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
   constructor(
     protected readonly moduleRef: ModuleRef,
     protected readonly loggerService: LoggerService,
-    protected readonly dataSource: DataSource
+    protected readonly databaseService: DatabaseService
   ) {}
 
   // TODO: REMOVE THIS ON DEPLOY
@@ -22,14 +22,14 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
   }
 
   protected async shouldExtracProject(): Promise<boolean> {
-    const count = await this.dataSource.getRepository(GreendocsProjectEntity).count({
+    const count = await this.databaseService.getRepository(ProjectEntity).count({
       where: {updatedAt: MoreThan(subDays(new Date(), 1))},
     });
     return !count;
   }
 
-  protected async getProjectToExtractSupplier(referenceDate: Date): Promise<TGreendocsProject | undefined> {
-    const project = await this.dataSource.getRepository(GreendocsProjectEntity).findOne({
+  protected async getProjectToExtractSupplier(referenceDate: Date): Promise<TProject | undefined> {
+    const project = await this.databaseService.getRepository(ProjectEntity).findOne({
       where: {
         suppliersExtractionAt: Or(IsNull(), LessThan(referenceDate)),
         submenuSelector: Not(IsNull()),
@@ -45,7 +45,7 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
     if (await this.shouldExtracProject()) {
       await this.moduleRef.get(workers.ProjectWorker).run();
     }
-    this.loggerService.log('Starting project extraction}');
+    this.loggerService.log('Starting project extraction');
 
     const reference = subHours(new Date(), 1);
     while (true) {

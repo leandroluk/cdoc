@@ -7,13 +7,13 @@ import {CacheEnv} from './cache.env';
 export class CacheService {
   constructor(
     private readonly cacheEnv: CacheEnv,
-    private readonly client: Redis,
+    private readonly cacheClient: Redis,
     private readonly loggerService: LoggerService
   ) {}
 
   async ping(): Promise<void> {
     try {
-      await this.client.ping();
+      await this.cacheClient.ping();
     } catch (error) {
       this.loggerService.error(`Failed to ping ${this.constructor.name}`, error);
       throw error;
@@ -22,7 +22,7 @@ export class CacheService {
 
   async get<T = unknown>(key: string): Promise<T | null> {
     try {
-      const stringfiedValue = await this.client.get(`${this.cacheEnv.prefix}:${key}`);
+      const stringfiedValue = await this.cacheClient.get(`${this.cacheEnv.prefix}:${key}`);
       if (stringfiedValue) {
         const value = JSON.parse(stringfiedValue);
         return value;
@@ -36,7 +36,7 @@ export class CacheService {
   async set<T = unknown>(key: string, value: T, expiresInSeconds?: number): Promise<void> {
     const ref = `${this.cacheEnv.prefix}:${key}`;
     const stringfiedValue = JSON.stringify(value);
-    let multi = this.client.multi().set(ref, stringfiedValue);
+    let multi = this.cacheClient.multi().set(ref, stringfiedValue);
     if (expiresInSeconds) {
       multi = multi.expire(ref, expiresInSeconds);
     }
@@ -44,10 +44,10 @@ export class CacheService {
   }
 
   async del(key: string): Promise<void> {
-    await this.client.del(`${this.cacheEnv.prefix}:${key}`);
+    await this.cacheClient.del(`${this.cacheEnv.prefix}:${key}`);
   }
 
   async has(key: string): Promise<boolean> {
-    return Boolean(await this.client.exists(key));
+    return Boolean(await this.cacheClient.exists(key));
   }
 }

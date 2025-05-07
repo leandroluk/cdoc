@@ -1,6 +1,7 @@
 import {TUser} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
+import Handlebars from 'handlebars';
 import {Jimp, JimpMime} from 'jimp';
 import {Readable} from 'node:stream';
 import {StorageProvider} from './decorators';

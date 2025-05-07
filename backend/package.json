@@ -11,7 +11,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build:api": "nest build apps-api",
+    "build:greendocs-extractor": "nest build apps-greendocs-extractor",
+    "build": "concurrently --names \"api,web\" \"yarn build:api\" \"yarn build:greendocs-extractor\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "dev": "nest start --debug --watch",
     "tsc": "tsc --noEmit",
@@ -58,6 +60,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.15.3",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^9.1.2",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-n": "^17.17.0",

@@ -1,25 +1,25 @@
+import {Injectable} from '@nestjs/common';
 import {Retry, TimeTrack} from 'libs/common';
 import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
 
-export abstract class AbstractWorker {
-  readonly cacheKey = 'scrapper';
-
+@Injectable()
+export class AuthWorker {
   constructor(
-    protected readonly appEnv: ExtractorEnv,
+    protected readonly extractorEnv: ExtractorEnv,
     protected readonly page: Page
   ) {}
 
   @TimeTrack()
   @Retry()
-  protected async login(email = this.appEnv.email, password = this.appEnv.password): Promise<void> {
+  protected async login(email = this.extractorEnv.email, password = this.extractorEnv.password): Promise<void> {
     // clear site data
     const client = await this.page.createCDPSession();
     await client.send('Network.clearBrowserCookies');
     await client.send('Network.clearBrowserCache');
     await this.page.evaluateOnNewDocument(() => [localStorage.clear(), sessionStorage.clear()]);
     // navigate to login with email page
-    await this.page.goto(`${this.appEnv.baseUrl}/Account/LogOn?ReturnUrl=/&loginPrincipal=true`);
+    await this.page.goto(`${this.extractorEnv.baseUrl}/Account/LogOn?ReturnUrl=/&loginPrincipal=true`);
     await this.page.waitForSelector('#tdLogin');
     // input form and submit
     await this.page.type('#email', email);

@@ -3,10 +3,10 @@ import {Injectable} from '@nestjs/common';
 import crypto from 'crypto';
 import {CommonEnv} from 'libs/common';
 import {CryptoService} from 'libs/crypto';
-import {CredentialEntity, OtpEntity, ProfileEntity, UserEntity} from 'libs/database';
+import {CredentialEntity, DatabaseService, OtpEntity, ProfileEntity, UserEntity} from 'libs/database';
 import {StreamService, UserOtpUpdatedEvent} from 'libs/stream';
 import ms from 'ms';
-import {DataSource, EntityManager} from 'typeorm';
+import {EntityManager} from 'typeorm';
 import {uuidv7} from 'uuidv7';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class OtpAuthService implements TOtpAuth {
   constructor(
     private readonly cryptoService: CryptoService,
     private readonly commonEnv: CommonEnv,
-    private readonly dataSource: DataSource,
+    private readonly databaseService: DatabaseService,
     private readonly streamService: StreamService
   ) {}
 
@@ -71,7 +71,7 @@ export class OtpAuthService implements TOtpAuth {
   }
 
   async run(data: TOtpAuth.Data): Promise<void> {
-    await this.dataSource.transaction(async entityManager => {
+    await this.databaseService.transaction(async entityManager => {
       const user = await this.getUser(entityManager, data.body.email);
       const {otp} = await this.updateOtp(entityManager, user.id);
       await this.publishUserOtpUpdatedEvent(user, otp);

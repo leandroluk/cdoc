@@ -1,37 +1,22 @@
-import {TGreendocsProject, TGreendocsSupplier} from '@cdoc/domain';
+import {TProject, TSupplier} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {Retry, TimeTrack} from 'libs/common';
-import {GreendocsProjectEntity, GreendocsSupplierEntity} from 'libs/database';
+import {DatabaseService, ProjectEntity, SupplierEntity} from 'libs/database';
 import {Page} from 'puppeteer';
-import {DataSource} from 'typeorm';
 import {ExtractorEnv} from '../extractor.env';
-import {AbstractWorker} from '../generics';
+import {AuthWorker} from './auth.worker';
 
 @Injectable()
-export class SupplierWorker extends AbstractWorker {
+export class SupplierWorker extends AuthWorker {
   readonly dataScrapperAttribute = 'data-scrapper';
   readonly paginationSelector = 'select#PaginarPor';
   readonly instanceHeaderSelector = '#acoes_Objeto';
   readonly instanceContentSelector = '#conteudo_instancia form #infoBasica';
-  readonly overwriteFields: Array<keyof TGreendocsSupplier> = [
-    'link',
-    'name',
-    'supplierName',
-    'address',
-    'city',
-    'state',
-    'zipCode',
-    'email',
-    'phone',
-    'responsible',
-    'greendocsProjectId',
-  ];
-  readonly conflictTarget: Array<keyof TGreendocsSupplier> = ['id'];
 
   constructor(
     appEnv: ExtractorEnv,
     page: Page,
-    protected readonly dataSource: DataSource
+    protected readonly databaseService: DatabaseService
   ) {
     super(appEnv, page);
   }
@@ -39,7 +24,7 @@ export class SupplierWorker extends AbstractWorker {
   @TimeTrack()
   @Retry()
   protected async navigateToSuppliersPage(
-    suppliersViewLink: Exclude<TGreendocsProject['suppliersViewLink'], null>
+    suppliersViewLink: Exclude<TProject['suppliersViewLink'], null>
   ): Promise<void> {
     await Promise.all([
       this.page.goto(suppliersViewLink), //
@@ -84,17 +69,21 @@ export class SupplierWorker extends AbstractWorker {
 
   @TimeTrack()
   @Retry()
-  protected async extractPartialSupplierList(): Promise<Array<Partial<TGreendocsSupplier>>> {
+  protected async extractPartialSupplierList(): Promise<
+    Array<
+      Pick<TSupplier, 'link' | 'greendocsDocId' | 'greendocsInstanceId' | 'greendocsName' | 'greendocsInAttentionBy'>
+    >
+  > {
     const evaluated = await this.page.evaluate(() => {
       return [...document.querySelectorAll<HTMLTableRowElement>('#documentos .item.clicavel')].map(tr => {
         const [tdName, tdInAttentionBy] = tr.querySelectorAll<HTMLTableCellElement>('td[title]');
         return {
-          id: Number(tr.getAttribute('data-iddoc')),
-          instanceId: Number(tr.getAttribute('data-idinstancia')),
-          link: tdName.querySelector<HTMLAnchorElement>('a')?.href,
-          name: tdName.title,
-          inAttentionBy: tdInAttentionBy.title,
-        } satisfies Partial<TGreendocsSupplier>;
+          link: tdName.querySelector<HTMLAnchorElement>('a')!.href,
+          greendocsDocId: Number(tr.getAttribute('data-iddoc')),
+          greendocsInstanceId: Number(tr.getAttribute('data-idinstancia')),
+          greendocsName: tdName.title,
+          greendocsInAttentionBy: tdInAttentionBy.title,
+        } satisfies Partial<TSupplier>;
       });
     });
     return evaluated;
@@ -102,82 +91,84 @@ export class SupplierWorker extends AbstractWorker {
 
   @TimeTrack()
   @Retry()
-  protected async navigateToSupplierPage(link: TGreendocsSupplier['link']): Promise<void> {
+  protected async navigateToSupplierPage(link: TSupplier['link']): Promise<void> {
     await this.page.goto(link);
     await this.page.waitForSelector(this.instanceContentSelector);
   }
 
   @TimeTrack()
-  protected async extractFromHeader(greendocsSupplier: Partial<TGreendocsSupplier>): Promise<void> {
+  protected async completeSupplierFromHeader(supplier: Partial<TSupplier>): Promise<void> {
     const evaluated = await this.page.evaluate(selector => {
       const responsibleRegexMatch = /^respons.+:\s/i;
       const situationRegexMatch = /^situa.+:\s/i;
       const div = document.querySelector<HTMLDivElement>(selector)!;
       const textList = [...div.parentNode!.children].map((item: HTMLDivElement) => item.innerText);
       return {
-        responsible:
+        greendocsResponsible:
           textList
             .find(text => responsibleRegexMatch.test(text))
             ?.replace(responsibleRegexMatch, '')
             .trim() ?? '',
-        situation:
+        greendocsSituation:
           textList
             .find(text => situationRegexMatch.test(text))
             ?.replace(situationRegexMatch, '')
             .trim() ?? '',
-      } satisfies Partial<TGreendocsSupplier>;
+      } satisfies Partial<TSupplier>;
     }, this.instanceHeaderSelector);
-    Object.assign(greendocsSupplier, evaluated);
+    Object.assign(supplier, evaluated);
   }
 
   @TimeTrack()
-  protected async extractFromContent(greendocsSupplier: Partial<TGreendocsSupplier>): Promise<void> {
+  protected async completeSupplierFromContent(supplier: Partial<TSupplier>): Promise<void> {
     const evaluated = await this.page.evaluate(selector => {
       const div = document.querySelector<HTMLElement>(selector)!;
       return {
-        supplierName: div.querySelector<HTMLElement>('#tr_met_Nome_Fornecedor span')?.innerText?.trim() ?? '',
-        address: div.querySelector<HTMLElement>('#tr_met_Endereco td:last-child > div')?.title ?? '',
-        city: div.querySelector<HTMLElement>('#tr_met_Cidade td:last-child > div')?.title ?? '',
-        state: div.querySelector<HTMLElement>('#tr_met_Estado td:last-child > div')?.title ?? '',
-        zipCode: div.querySelector<HTMLElement>('#tr_met_CEP td:last-child > div')?.title ?? '',
-        email: div.querySelector<HTMLElement>('#tr_met_email td:last-child > div')?.title ?? '',
-        phone: div.querySelector<HTMLElement>('#tr_met_Telefone td:last-child > div')?.title ?? '',
-      } satisfies Partial<TGreendocsSupplier>;
+        greendocsSupplierName: div.querySelector<HTMLElement>('#tr_met_Nome_Fornecedor span')?.innerText?.trim() ?? '',
+        greendocsAddress: div.querySelector<HTMLElement>('#tr_met_Endereco td:last-child > div')?.title ?? '',
+        greendocsCity: div.querySelector<HTMLElement>('#tr_met_Cidade td:last-child > div')?.title ?? '',
+        greendocsState: div.querySelector<HTMLElement>('#tr_met_Estado td:last-child > div')?.title ?? '',
+        greendocsZipCode: div.querySelector<HTMLElement>('#tr_met_CEP td:last-child > div')?.title ?? '',
+        greendocsEmail: div.querySelector<HTMLElement>('#tr_met_email td:last-child > div')?.title ?? '',
+        greendocsPhone: div.querySelector<HTMLElement>('#tr_met_Telefone td:last-child > div')?.title ?? '',
+      } satisfies Partial<TSupplier>;
     }, this.instanceContentSelector);
-    Object.assign(greendocsSupplier, evaluated);
+    Object.assign(supplier, evaluated);
   }
 
   @TimeTrack()
-  protected async upsertGreendocsSupplier(greendocsSupplier: Partial<TGreendocsSupplier>): Promise<void> {
-    await this.dataSource
-      .getRepository(GreendocsSupplierEntity)
-      .createQueryBuilder()
-      .insert()
-      .values(greendocsSupplier)
-      .orUpdate(this.overwriteFields, this.conflictTarget)
-      .execute();
+  protected async upsertSupplier(supplier: Partial<TSupplier>): Promise<void> {
+    const repository = this.databaseService.getRepository(SupplierEntity);
+    const entity = repository.create(supplier);
+    const replaceableList = this.databaseService.getReplaceableColumnDatabaseNames(SupplierEntity);
+    const uniqueList = this.databaseService.getUniqueColumnDatabaseNames(SupplierEntity);
+    await repository.createQueryBuilder().insert().values(entity).orUpdate(replaceableList, uniqueList).execute();
   }
 
-  protected async updateGreendocsProject(greendocsProject: TGreendocsProject): Promise<void> {
-    await this.dataSource
-      .getRepository(GreendocsProjectEntity)
-      .update({id: greendocsProject.id}, {suppliersExtractionAt: new Date()});
+  protected async updateProject(project: TProject): Promise<void> {
+    await this.databaseService //
+      .getRepository(ProjectEntity)
+      .update({id: project.id}, {suppliersExtractionAt: new Date()});
   }
 
   @TimeTrack()
-  async run(greendocsProject: TGreendocsProject): Promise<void> {
+  @Retry()
+  async run(project: TProject): Promise<void> {
+    if (!project.suppliersViewLink) {
+      return;
+    }
     await this.login();
-    await this.navigateToSuppliersPage(greendocsProject.suppliersViewLink!);
+    await this.navigateToSuppliersPage(project.suppliersViewLink);
     await this.changePagination();
     await this.loadAllPages();
-    const greendocsSupplierList = await this.extractPartialSupplierList();
-    for (const grendocsSupplier of greendocsSupplierList) {
-      grendocsSupplier.greendocsProjectId = greendocsProject.id;
-      await this.navigateToSupplierPage(grendocsSupplier.link!);
-      await this.extractFromHeader(grendocsSupplier);
-      await this.extractFromContent(grendocsSupplier);
-      await this.upsertGreendocsSupplier(grendocsSupplier);
+    const partialSupplierList: Array<Partial<TSupplier>> = await this.extractPartialSupplierList();
+    for (const partialSupplier of partialSupplierList) {
+      partialSupplier.projectId = project.id;
+      await this.navigateToSupplierPage(partialSupplier.link as string);
+      await this.completeSupplierFromHeader(partialSupplier);
+      await this.completeSupplierFromContent(partialSupplier);
+      await this.upsertSupplier(partialSupplier);
     }
-    await this.updateGreendocsProject(greendocsProject);
+    await this.updateProject(project);
   }
 }

@@ -1,29 +1,21 @@
-import {TGreendocsProject} from '@cdoc/domain';
+import {TProject} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {Retry, TimeTrack} from 'libs/common';
-import {GreendocsProjectEntity} from 'libs/database';
+import {DatabaseService, ProjectEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {Page} from 'puppeteer';
-import {DataSource} from 'typeorm';
 import {ExtractorEnv} from '../extractor.env';
-import {AbstractWorker} from '../generics';
+import {AuthWorker} from './auth.worker';
 
 @Injectable()
-export class ProjectWorker extends AbstractWorker {
+export class ProjectWorker extends AuthWorker {
   readonly projectListSelector = '#lista_projetos .item_menu [onclick]';
   readonly cdocSelector = '[title="CDOC"]';
-  readonly overwriteFields: Array<keyof TGreendocsProject> = [
-    'name',
-    'submenuSelector',
-    'suppliersViewLink',
-    'reserveViewLink',
-  ];
-  readonly conflictTarget: Array<keyof TGreendocsProject> = ['id'];
 
   constructor(
     appEnv: ExtractorEnv,
     page: Page,
-    readonly dataSource: DataSource,
+    readonly databaseService: DatabaseService,
     readonly loggerService: LoggerService
   ) {
     super(appEnv, page);
@@ -33,7 +25,7 @@ export class ProjectWorker extends AbstractWorker {
   @Retry()
   protected async navigateToRootPage(): Promise<void> {
     await Promise.all([
-      this.page.goto(`${this.appEnv.baseUrl}/Itens/Todos`), //
+      this.page.goto(`${this.extractorEnv.baseUrl}/Itens/Todos`), //
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
     await this.page.waitForSelector('#lista_projetos');
@@ -41,14 +33,14 @@ export class ProjectWorker extends AbstractWorker {
 
   @TimeTrack()
   @Retry()
-  protected async extractPartialGreendocsProjectList(): Promise<Array<Partial<TGreendocsProject>>> {
+  protected async extractPartialProjectList(): Promise<Array<Partial<TProject>>> {
     await this.page.waitForSelector(this.projectListSelector);
     const evaluated = await this.page.evaluate(selector => {
       return [...document.querySelectorAll<HTMLDivElement>(selector)]
         .filter(el => el.getAttribute('onclick')?.startsWith('alterarProjeto'))
-        .map<Partial<TGreendocsProject>>(el => ({
-          id: Number(el.getAttribute('onclick')!.replace(/\D/g, '')),
-          name: el.innerText.trim().replace(/\n|\r/, ''),
+        .map<Partial<TProject>>(el => ({
+          greendocsId: Number(el.getAttribute('onclick')!.replace(/\D/g, '')),
+          greendocsName: el.innerText.trim().replace(/\n|\r/, ''),
         }));
     }, this.projectListSelector);
     return evaluated;
@@ -56,69 +48,68 @@ export class ProjectWorker extends AbstractWorker {
 
   @TimeTrack()
   @Retry()
-  protected async navigateToProjectPage(greendocsProject: Partial<TGreendocsProject>): Promise<void> {
-    await this.page.evaluate(id => (window as any).alterarProjeto(`${id}`), greendocsProject.id);
+  protected async navigateToProjectPage(project: Partial<TProject>): Promise<void> {
+    await this.page.evaluate(id => (window as any).alterarProjeto(`${id}`), project.greendocsId);
     await this.page.waitForNavigation({waitUntil: 'networkidle0'});
     const cdocId = await this.page.evaluate(selectors => document.querySelector(selectors)?.id, this.cdocSelector);
     if (cdocId) {
-      greendocsProject.submenuSelector = `#div${cdocId}`;
+      project.submenuSelector = `#div${cdocId}`;
     }
-    greendocsProject.link = this.page.url();
+    project.link = this.page.url();
   }
 
   @TimeTrack()
   @Retry()
-  protected async loadCdocSubmenu(greendocsProject: Partial<TGreendocsProject>): Promise<void> {
+  protected async loadCdocSubmenu(project: Partial<TProject>): Promise<void> {
     await this.page.click(this.cdocSelector);
     const cdocId = await this.page.evaluate(selectors => document.querySelector(selectors)!.id, this.cdocSelector);
-    greendocsProject.submenuSelector = `#div${cdocId}`;
+    project.submenuSelector = `#div${cdocId}`;
     await this.page.waitForFunction(
       selectors => Number(document.querySelector(selectors)?.children.length) > 0,
       {},
-      greendocsProject.submenuSelector
+      project.submenuSelector
     );
   }
 
   @TimeTrack()
   @Retry()
-  protected async updateProjectWithLinks(greendocsProject: Partial<TGreendocsProject>): Promise<void> {
+  protected async updateProjectWithLinks(project: Partial<TProject>): Promise<void> {
     const evaluated = await this.page.evaluate(selectors => {
       const anchorList = Array.from(document.querySelector(selectors)?.children ?? []);
       return anchorList.map(({title, href}: HTMLAnchorElement) => ({title, href}));
-    }, greendocsProject.submenuSelector!);
+    }, project.submenuSelector as string);
     for (const anchor of evaluated) {
       if (/FORNECEDOR/i.test(anchor.title)) {
-        greendocsProject.suppliersViewLink = anchor.href;
+        project.suppliersViewLink = anchor.href;
       }
       if (/RESERVA/i.test(anchor.title)) {
-        greendocsProject.reserveViewLink = anchor.href;
+        project.reserveViewLink = anchor.href;
       }
     }
   }
 
   @TimeTrack()
-  protected async upsertGreendocsProject(greendocsProject: Partial<GreendocsProjectEntity>): Promise<void> {
-    await this.dataSource
-      .getRepository(GreendocsProjectEntity)
-      .createQueryBuilder()
-      .insert()
-      .values(greendocsProject)
-      .orUpdate(this.overwriteFields, this.conflictTarget)
-      .execute();
+  protected async upsertProject(project: Partial<ProjectEntity>): Promise<void> {
+    const repository = this.databaseService.getRepository(ProjectEntity);
+    const entity = repository.create(project);
+    const replaceableList = this.databaseService.getReplaceableColumnDatabaseNames(ProjectEntity);
+    const uniqueList = this.databaseService.getUniqueColumnDatabaseNames(ProjectEntity);
+    await repository.createQueryBuilder().insert().values(entity).orUpdate(replaceableList, uniqueList).execute();
   }
 
   @TimeTrack()
+  @Retry()
   async run(): Promise<void> {
     await this.login();
     await this.navigateToRootPage();
-    const greendocsProjectList = await this.extractPartialGreendocsProjectList();
-    for (const greendocsProject of greendocsProjectList) {
-      await this.navigateToProjectPage(greendocsProject);
-      if (greendocsProject.submenuSelector) {
-        await this.loadCdocSubmenu(greendocsProject);
-        await this.updateProjectWithLinks(greendocsProject);
+    const projectList = await this.extractPartialProjectList();
+    for (const project of projectList) {
+      await this.navigateToProjectPage(project);
+      if (project.submenuSelector) {
+        await this.loadCdocSubmenu(project);
+        await this.updateProjectWithLinks(project);
       }
-      await this.upsertGreendocsProject(greendocsProject);
+      await this.upsertProject(project);
     }
   }
 }

@@ -30,45 +30,20 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "paths": {
-      "#/*": [
-        "src/*"
-      ],
-      "@app/mailer": [
-        "libs/mailer/src"
-      ],
-      "@app/mailer/*": [
-        "libs/mailer/src/*"
-      ],
-      "@app/session": [
-        "libs/session/src"
-      ],
-      "@app/session/*": [
-        "libs/session/src/*"
-      ],
-      "@app/storage": [
-        "libs/storage/src"
-      ],
-      "@app/storage/*": [
-        "libs/storage/src/*"
-      ],
-      "@app/stream": [
-        "libs/stream/src"
-      ],
-      "@app/stream/*": [
-        "libs/stream/src/*"
-      ]
+      "#/*": ["src/*"],
+      "@app/mailer": ["libs/mailer/src"],
+      "@app/mailer/*": ["libs/mailer/src/*"],
+      "@app/session": ["libs/session/src"],
+      "@app/session/*": ["libs/session/src/*"],
+      "@app/storage": ["libs/storage/src"],
+      "@app/storage/*": ["libs/storage/src/*"],
+      "@app/stream": ["libs/stream/src"],
+      "@app/stream/*": ["libs/stream/src/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "require": ["tsconfig-paths/register"]
   }
 }

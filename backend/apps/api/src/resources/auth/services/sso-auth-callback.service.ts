@@ -2,12 +2,12 @@ import {EProvider, ERole, TOpenid, TProfile, TSsoAuthCallback, TUser} from '@cdo
 import {Injectable} from '@nestjs/common';
 import axios from 'axios';
 import {CommonEnv} from 'libs/common';
-import {ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
+import {DatabaseService, ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
 import {StorageService} from 'libs/storage';
 import ms from 'ms';
 import {Readable} from 'node:stream';
-import {DataSource, EntityManager} from 'typeorm';
+import {EntityManager} from 'typeorm';
 import {uuidv7} from 'uuidv7';
 
 abstract class Provider {
@@ -23,7 +23,7 @@ export class SsoAuthCallbackService implements TSsoAuthCallback {
   constructor(
     private readonly commonEnv: CommonEnv,
     private readonly sessionService: SessionService,
-    private readonly dataSource: DataSource,
+    private readonly databaseService: DatabaseService,
     private readonly storageService: StorageService
   ) {
     // TIP: make to add more providers when necessary
@@ -111,7 +111,7 @@ export class SsoAuthCallbackService implements TSsoAuthCallback {
       redirect.searchParams.set('error_code', error);
       return {id: '', redirect: redirect.toString()};
     }
-    return await this.dataSource.transaction(async entityManager => {
+    return await this.databaseService.transaction(async entityManager => {
       const authProvider = this.map.get(data.params.provider)!;
       const openidToken = await authProvider.getToken(data.query.code as string);
       const [openidInfo, openidPicture] = await Promise.all([

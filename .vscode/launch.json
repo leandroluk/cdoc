@@ -3,7 +3,7 @@
   "configurations": [
     // backend api
     {
-      "name": "backend:api",
+      "name": "b:api",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/backend",
@@ -15,7 +15,7 @@
     },
     // backend greendocs-extractor
     {
-      "name": "backend:greendocs-extractor",
+      "name": "b:greendocs-extractor",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/backend",

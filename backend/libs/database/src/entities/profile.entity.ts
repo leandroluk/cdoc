@@ -1,43 +1,44 @@
 import {ETheme, TProfile} from '@cdoc/domain';
 import {Column, JoinColumn, OneToOne} from 'typeorm';
+import {uuidv7} from 'uuidv7';
 import {FullTextEntity, IndexableColumn, UpdatableColumn} from '../decorators';
 import {UserEntity} from './user.entity';
 
 @FullTextEntity<TProfile>({name: 'profile', fullTextFields: ['givenName', 'familyName']})
 export class ProfileEntity implements TProfile {
   @IndexableColumn()
-  id!: string;
+  id: string = uuidv7();
 
   @UpdatableColumn()
-  updatedAt!: Date;
+  updatedAt: Date = new Date();
 
   @Column({name: 'given_name', type: 'varchar', length: 100, nullable: true})
-  givenName!: null | string;
+  givenName: null | string;
 
   @Column({name: 'family_name', type: 'varchar', length: 100, nullable: true})
-  familyName!: null | string;
+  familyName: null | string;
 
   @Column({name: 'picture', type: 'text', nullable: true})
-  picture!: null | string;
+  picture: null | string;
 
   @Column({name: 'cover', type: 'text', nullable: true})
-  cover!: null | string;
+  cover: null | string;
 
-  @Column({name: 'locale', type: 'varchar', length: 10})
-  locale!: string;
+  @Column({name: 'locale', type: 'varchar', length: 10, default: 'pt-BR'})
+  locale: string;
 
   @Column({name: 'theme', type: 'enum', enum: ETheme, default: ETheme.Light})
-  theme!: ETheme;
+  theme: ETheme;
 
-  @Column({name: 'timezone', type: 'varchar', length: 50})
-  timezone!: string;
+  @Column({name: 'timezone', type: 'varchar', length: 50, default: 'UTC'})
+  timezone: string;
 
   @Column({name: 'user_id', type: 'uuid'})
-  userId!: string;
+  userId: string;
 
   //--
 
   @OneToOne(() => UserEntity, _ => _.Profile, {cascade: true})
   @JoinColumn({name: 'user_id', referencedColumnName: 'id'})
-  User!: UserEntity;
+  User: UserEntity;
 }

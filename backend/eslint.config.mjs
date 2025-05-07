@@ -9,15 +9,15 @@ import tseslint from 'typescript-eslint';
 import rulesEslintConfig from '../rules.eslint.config.mjs';
 
 export default tseslint.config(
-  /** @type {import("eslint").Linter.Config} */
+  /** files @type {import("eslint").Linter.Config} */
   {
-    files: ["**/*.ts", "**/*.js", "**/*.cts", "**.*.mts"],
+    files: ['**/*.ts', '**/*.js', '**/*.cts', '**.*.mts'],
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** ignores @type {import("eslint").Linter.Config} */
   {
     ignores: ['eslint.config.mjs', 'webpack.config.js'],
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** languageOptions @type {import("eslint").Linter.Config} */
   {
     languageOptions: {
       globals: {
@@ -31,9 +31,9 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
         warnOnUnsupportedTypeScriptVersion: false,
       },
-    }
+    },
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** plugins @type {import("eslint").Linter.Config} */
   {
     plugins: {
       n: eslintPluginN,
@@ -41,16 +41,19 @@ export default tseslint.config(
       '@typescript-eslint': typescriptEslintPlugin,
     },
   },
-  /** @type {import("eslint").Linter.Config} */
+  /** rules @type {import("eslint").Linter.Config} */
   {
     rules: {
       ...js.configs.recommended.rules,
       ...eslintPluginPrettierRecommended.rules,
-      ...tseslint.configs.recommendedTypeChecked.reduce((obj, item) => ({
-        ...obj,
-        rules: {...obj.rules, ...item.rules}
-      }), {}).rules,
+      ...tseslint.configs.recommendedTypeChecked.reduce(
+        (obj, item) => ({
+          ...obj,
+          rules: {...obj.rules, ...item.rules},
+        }),
+        {}
+      ).rules,
       ...rulesEslintConfig,
-    }
+    },
   }
 );
