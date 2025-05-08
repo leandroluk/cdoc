@@ -5,16 +5,10 @@ import {EnvProperty} from 'libs/common';
 @Injectable()
 export class AppEnv {
   @EnvProperty({
-    name: 'APPS_API_HTTP_PORT',
+    name: 'APPS_API_PORT',
     schema: Joi.number().integer().positive().default(4000),
   })
-  httpPort: number;
-
-  @EnvProperty({
-    name: 'APPS_API_HTTPS_PORT',
-    schema: Joi.number().integer().positive().default(4433),
-  })
-  httpsPort: number;
+  port: number;
 
   @EnvProperty({
     name: 'APPS_API_PREFIX',
@@ -29,14 +23,14 @@ export class AppEnv {
   origin: string;
 
   @EnvProperty({
-    name: 'APPS_API_HTTPS_CERT',
-    schema: Joi.string(),
+    name: 'APPS_API_CERT',
+    schema: Joi.string().required().custom(value => value.replace(/\\n/g, '\n')), // prettier-ignore
   })
-  httpsCert: string;
+  cert: string;
 
   @EnvProperty({
-    name: 'APPS_API_HTTPS_KEY',
-    schema: Joi.string(),
+    name: 'APPS_API_KEY',
+    schema: Joi.string().required().custom(value => value.replace(/\\n/g, '\n')), // prettier-ignore
   })
-  httpsKey: string;
+  key: string;
 }

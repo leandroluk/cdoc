@@ -8,11 +8,11 @@ import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import express from 'express';
 import helmet from 'helmet';
+import https from 'https';
 import {LoggerService} from 'libs/logger';
 import packageJson from 'package.json';
 import {AppEnv} from './app.env';
 import {AppModule} from './app.module';
-import {AppService} from './app.service';
 
 dotenvExpand.expand(dotenv.config());
 
@@ -31,22 +31,12 @@ export async function bootstrap(): Promise<void> {
   app.useLogger(loggerService);
   app.enableCors({
     credentials: true,
-    origin(requestOrigin, callback) {
-      if (!requestOrigin) {
-        return callback(null, false);
-      }
-
-      if (appEnv.origin === '*') {
-        return callback(null, requestOrigin);
-      }
-
-      const allowedOrigins = appEnv.origin.replace(/\s/g, '').split(',');
-      if (allowedOrigins.includes(requestOrigin)) {
-        return callback(null, requestOrigin);
-      }
-
-      return callback(new UnauthorizedException('Origin not allowed by CORS'));
-    },
+    origin: (origin, callback) =>
+      !origin
+        ? callback(null, false)
+        : appEnv.origin === '*' || appEnv.origin.replace(/\s/g, '').split(',').includes(origin)
+          ? callback(null, origin)
+          : callback(new UnauthorizedException('Origin not allowed by CORS')),
   });
   app.use(helmet());
   app.use(cookieParser());
@@ -69,7 +59,10 @@ export async function bootstrap(): Promise<void> {
   });
 
   await app.init();
-  await app.get(AppService).listen(server);
+
+  https.createServer({cert: appEnv.cert, key: appEnv.key}, server).listen(appEnv.port, () => {
+    loggerService.log(`✅ HTTPS server started on port ${appEnv.port}`);
+  });
 }
 
 bootstrap(); // eslint-disable-line @typescript-eslint/no-floating-promises
