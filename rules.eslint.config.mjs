@@ -15,6 +15,7 @@ export default {
   '@typescript-eslint/no-use-before-define': 'off',
   '@typescript-eslint/no-empty-object-type': 'off',
   '@typescript-eslint/no-array-constructor': 'off',
+  '@typescript-eslint/no-misused-promises': 'off',
   '@typescript-eslint/no-warning-comments': 'off',
   '@typescript-eslint/no-unsafe-argument': 'off',
   '@typescript-eslint/no-empty-function': 'off',
@@ -61,9 +62,9 @@ export default {
   'n/no-unsupported-features/es-syntax': 'off',
   'n/no-missing-require': 'off',
   'n/shebang': 'off',
-  'no-unneeded-ternary': 'error',
   //#endregion
   //#region eslint "no-*"
+  'no-unneeded-ternary': 'error',
   'no-dupe-class-members': 'off',
   'no-var': 'error',
   'no-trailing-spaces': 'error',

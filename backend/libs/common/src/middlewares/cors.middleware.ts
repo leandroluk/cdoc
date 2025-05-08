@@ -12,7 +12,7 @@ export class CorsMiddleware implements NestMiddleware {
 
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
 
     if (this.commonEnv.origin !== '*') {
       const allowedOrigins = this.commonEnv.origin.split(',');
@@ -25,7 +25,9 @@ export class CorsMiddleware implements NestMiddleware {
         }
       }
     } else {
-      res.header('Access-Control-Allow-Origin', '*');
+      if (origin) {
+        res.header('Access-Control-Allow-Origin', origin);
+      }
     }
 
     if (req.method === 'OPTIONS') {

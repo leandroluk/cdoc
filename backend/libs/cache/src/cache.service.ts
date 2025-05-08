@@ -20,9 +20,10 @@ export class CacheService {
     }
   }
 
-  async get<T = unknown>(key: string): Promise<T | null> {
+  async get<T = unknown>(pattern: string): Promise<T | null> {
     try {
-      const stringfiedValue = await this.cacheClient.get(`${this.cacheEnv.prefix}:${key}`);
+      const [key] = await this.cacheClient.keys(`${this.cacheEnv.prefix}:${pattern}`);
+      const stringfiedValue = await this.cacheClient.get(key);
       if (stringfiedValue) {
         const value = JSON.parse(stringfiedValue);
         return value;

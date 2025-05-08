@@ -30,4 +30,10 @@ export class StorageEnv {
     schema: Joi.string().default('/user/{{userId}}/picture.{{ext}}'),
   })
   userPictureUrl: number;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_USER_COVER_URL',
+    schema: Joi.string().default('/user/{{userId}}/cover.{{ext}}'),
+  })
+  userCoverUrl: number;
 }

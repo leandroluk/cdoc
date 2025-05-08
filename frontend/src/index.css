@@ -7,7 +7,7 @@
 @plugin "daisyui" {
   themes: all;
   root: ':root';
-  logs: true;
+  logs: false;
 }
 
 :root {

@@ -18,7 +18,7 @@ prepare-commit-msg:
 
         fs.writeFileSync('./package.json', JSON.stringify(rootPackageJson, null, 2), 'utf8')
 
-        for (const workspaceDir of rootPackageJson.workspaces) {
+        for (const workspaceDir of rootPackageJson.workspaces.packages) {
           const workspacePackageJsonPath = path.resolve(workspaceDir, 'package.json');
           const workspacePackageJson = Object
             .entries(require(workspacePackageJsonPath))

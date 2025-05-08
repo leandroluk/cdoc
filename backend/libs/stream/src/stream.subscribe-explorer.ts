@@ -7,19 +7,28 @@ import {STREAM_SUBSCRIBE_EVENT_METADATA_KEY} from './stream.constants';
 
 @Injectable()
 export class StreamSubscribeExplorer implements OnApplicationBootstrap {
+  readonly subscriber: Redis;
+
   constructor(
     private readonly discoveryService: DiscoveryService,
     private readonly reflector: Reflector,
     private readonly metadataScanner: MetadataScanner,
     private readonly loggerService: LoggerService,
     private readonly streamClient: Redis
-  ) {}
+  ) {
+    this.subscriber = this.streamClient.duplicate({
+      autoResubscribe: true,
+      reconnectOnError: () => true,
+    });
+  }
 
   async onApplicationBootstrap(): Promise<void> {
     this.explore().catch(console.error);
   }
 
   private async explore(): Promise<void> {
+    await this.subscriber.connect();
+
     const instanceWrappers = this.discoveryService.getProviders();
 
     for (const {instance} of instanceWrappers) {
@@ -43,9 +52,9 @@ export class StreamSubscribeExplorer implements OnApplicationBootstrap {
         const {eventClass} = metadata;
         const topic = eventClass.name;
 
-        await this.streamClient.subscribe(topic);
+        await this.subscriber.subscribe(topic);
 
-        this.streamClient.on('message', (channel, message) => {
+        this.subscriber.on('message', (channel, message) => {
           if (channel !== topic) {
             return;
           }

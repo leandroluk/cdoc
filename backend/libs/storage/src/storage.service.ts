@@ -28,26 +28,28 @@ export class StorageService implements StorageProvider.Type {
       .read(filePath);
   }
 
-  async saveUserPicture(userId: TUser['id'], readable: Readable, kind?: StorageProvider.Kind): Promise<string> {
-    const size = this.storageEnv.userPictureSize;
-
+  async saveUserPicture(userId: TUser['id'], readable: Readable, kind = this.storageEnv.provider): Promise<string> {
     const buffer = await new Promise<Buffer>((resolve, reject) => {
-      const chunks: Buffer[] = [];
+      const chunks = Array<Buffer>();
       readable.on('data', chunk => chunks.push(chunk));
       readable.on('end', () => resolve(Buffer.concat(chunks)));
       readable.on('error', reject);
     });
 
     const image = await Jimp.read(buffer);
-    image.resize({w: size, h: size});
+    image.resize({w: this.storageEnv.userPictureSize, h: this.storageEnv.userPictureSize});
 
     const pngBuffer = await image.getBuffer(JimpMime.png);
     const resizedReadable = Readable.from(pngBuffer);
-
-    const template = Handlebars.compile(this.storageEnv.userPictureUrl);
-    const picturePath = template({userId, ext: 'png'});
+    const picturePath = Handlebars.compile(this.storageEnv.userPictureUrl)({userId, ext: 'png'});
 
     await this.write(picturePath, resizedReadable, kind);
+    return picturePath;
+  }
+
+  async saveUserCover(userId: TUser['id'], readable: Readable, kind = this.storageEnv.provider): Promise<string> {
+    const picturePath = Handlebars.compile(this.storageEnv.userCoverUrl)({userId, ext: 'png'});
+    await this.write(picturePath, readable, kind);
     return picturePath;
   }
 }

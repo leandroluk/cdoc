@@ -35,8 +35,8 @@ export class AuthController {
 
   //#region loginAuthCredential
   @Post('login/credential')
-  @HttpCode(HttpStatus.SEE_OTHER)
-  @ApiOperation({summary: 'Login account with credential'})
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({summary: 'Login user with credential'})
   @ApiQuery({
     name: 'redirect',
     description: 'Redirection URL when successful',
@@ -44,7 +44,7 @@ export class AuthController {
     required: true,
   })
   @ApiBody({schema: TLoginAuthCredential.Data.Body.swagger})
-  @ApiSeeOtherResponse({
+  @ApiOkResponse({
     description: 'Login successful',
     headers: {
       'Set-Cookie': {
@@ -57,24 +57,23 @@ export class AuthController {
   @ApiNotAcceptableResponse({description: 'Account requires activation'})
   @ValidateRequest(TLoginAuthCredential.Data.schema)
   async loginAuthCredential(
-    @Query() query: TLoginAuthCredential.Data.Query,
     @Body() body: TLoginAuthCredential.Data.Body,
     @Res({passthrough: true}) res: Response
   ): Promise<void> {
-    const {id} = await this.moduleRef.get(services.LoginAuthCredentialService).run({query, body});
-    res.cookie(COOKIE_SESSION_ID, id, {httpOnly: true, sameSite: 'none'});
-    res.redirect(HttpStatus.SEE_OTHER, query.redirect);
+    const result = await this.moduleRef.get(services.LoginAuthCredentialService).run({body});
+    res.setHeader('Set-Cookie', `${COOKIE_SESSION_ID}=${result.id}; Path=/;`);
+    res.sendStatus(HttpStatus.OK);
   }
   //#endregion
 
   //#region recoverAuth
   @Post('recover')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({summary: 'Recover account credential'})
+  @ApiOperation({summary: 'Recover user credential'})
   @ApiBody({schema: TRecoverAuth.Data.Body.swagger})
   @ApiOkResponse({description: 'Recover successful'})
   @ApiNotAcceptableResponse({description: 'Invalid token'})
-  @ApiNotFoundResponse({description: 'Cannot find account for change password'})
+  @ApiNotFoundResponse({description: 'Cannot find user for change password'})
   @ValidateRequest(TRecoverAuth.Data.schema)
   async recoverAuth(
     @Body() body: TRecoverAuth.Data.Body //
@@ -89,7 +88,7 @@ export class AuthController {
   @ApiOperation({summary: 'Send OTP'})
   @ApiBody({schema: TOtpAuth.Data.Body.swagger})
   @ApiOkResponse({description: 'Request successful'})
-  @ApiNotFoundResponse({description: 'Could not find a account for receive email'})
+  @ApiNotFoundResponse({description: 'Could not find a user for receive email'})
   @ValidateRequest(TOtpAuth.Data.schema)
   async otpAuth(
     @Body() body: TOtpAuth.Data.Body //
@@ -112,7 +111,7 @@ export class AuthController {
   ): Promise<void> {
     const result = await this.moduleRef.get(services.SsoAuthCallbackService).run({params, query});
     if (result.id) {
-      res.cookie('sid', result.id, {httpOnly: true, sameSite: 'none'});
+      res.cookie(COOKIE_SESSION_ID, result.id, {httpOnly: true, sameSite: 'none', secure: true});
       return res.redirect(HttpStatus.SEE_OTHER, result.redirect);
     }
     return res.redirect(HttpStatus.MOVED_PERMANENTLY, result.redirect);

@@ -135,18 +135,15 @@ export namespace SsoAuthCallbackService {
     private tokenConfig = {headers: {'Content-Type': 'application/x-www-form-urlencoded'}};
 
     async getToken(code: string): Promise<TOpenid.Token> {
-      const refreshResponse = await axios.post(
-        this.tokenUrl,
-        new URLSearchParams({
-          client_id: this.commonEnv.microsoftClientId,
-          client_secret: this.commonEnv.microsoftClientSecret,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: `${this.commonEnv.apiBaseUrl}/auth/login/${EProvider.Microsoft}`,
-          scope: 'openid email profile offline_access',
-        }),
-        this.tokenConfig
-      );
+      const searchParams = new URLSearchParams({
+        client_id: this.commonEnv.microsoftClientId,
+        client_secret: this.commonEnv.microsoftClientSecret,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: `${this.commonEnv.apiBaseUrl}/auth/login/${EProvider.Microsoft}/callback`,
+        scope: 'openid profile email offline_access User.Read',
+      });
+      const refreshResponse = await axios.post(this.tokenUrl, searchParams, this.tokenConfig);
       const tokenResponse = await axios.post(
         this.tokenUrl,
         new URLSearchParams({
@@ -154,7 +151,7 @@ export namespace SsoAuthCallbackService {
           client_secret: this.commonEnv.microsoftClientSecret,
           refresh_token: refreshResponse.data.refresh_token,
           grant_type: 'refresh_token',
-          scope: 'openid profile email User.Read',
+          scope: 'openid profile email offline_access User.Read',
         }),
         this.tokenConfig
       );

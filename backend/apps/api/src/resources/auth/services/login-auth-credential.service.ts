@@ -43,8 +43,8 @@ export class LoginAuthCredentialService implements TLoginAuthCredential {
       }
       const password = this.cryptoService.createHash(data.body.password);
       if (password === credential.password) {
-        const session = await this.sessionService.create(user, ms(this.commonEnv.refreshTtl));
-        return session;
+        const {id} = await this.sessionService.create(user, ms(this.commonEnv.refreshTtl));
+        return {id};
       }
     }
     throw new UnauthorizedException();

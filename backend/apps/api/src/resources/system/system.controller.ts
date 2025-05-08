@@ -17,7 +17,7 @@ export class SystemController {
   //#region healthcheck
   @Get('health')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({description: 'Healthcheck'})
+  @ApiOperation({summary: 'Healthcheck'})
   @ApiOkResponse({
     description: 'Application is healthy',
     schema: THealthcheck.Result.swagger,

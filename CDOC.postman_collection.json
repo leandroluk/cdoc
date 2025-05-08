@@ -1,0 +1,427 @@
+{
+	"info": {
+		"_postman_id": "6e90af64-219c-40d4-9767-749a1e0248b4",
+		"name": "CDOC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5338866"
+	},
+	"item": [
+		{
+			"name": "backend",
+			"item": [
+				{
+					"name": "api",
+					"item": [
+						{
+							"name": "auth",
+							"item": [
+								{
+									"name": "Login user with credential",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set('COOKIE_SESSION_ID', pm.cookies.get('sid'))"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/auth/login/credential?redirect={{FRONTEND_BASE_URL}}",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"auth",
+												"login",
+												"credential"
+											],
+											"query": [
+												{
+													"key": "redirect",
+													"value": "{{FRONTEND_BASE_URL}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Recover user credential",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"code\": \"123456\",\r\n  \"email\": \"john.doe@email.com\",\r\n  \"password\": \"Password@123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/auth/recover",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"auth",
+												"recover"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send OTP",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"john.doe@email.com\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/auth/otp",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"auth",
+												"otp"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Callback of SSO Provider",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}"
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/auth/login/{provider}/callback?redirect={{FRONTEND_BASE_URL}}",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"auth",
+												"login",
+												"{provider}",
+												"callback"
+											],
+											"query": [
+												{
+													"key": "redirect",
+													"value": "{{FRONTEND_BASE_URL}}"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "provider: microsoft",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}"
+												},
+												"url": {
+													"raw": "{{API_BASE_URL}}/auth/login/microsoft/callback?redirect={{FRONTEND_BASE_URL}}",
+													"host": [
+														"{{API_BASE_URL}}"
+													],
+													"path": [
+														"auth",
+														"login",
+														"microsoft",
+														"callback"
+													],
+													"query": [
+														{
+															"key": "redirect",
+															"value": "{{FRONTEND_BASE_URL}}"
+														}
+													]
+												}
+											},
+											"_postman_previewlanguage": null,
+											"header": null,
+											"cookie": [],
+											"body": null
+										}
+									]
+								},
+								{
+									"name": "Redirect to SSO Provider",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}"
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/auth/login/{provider}?redirect={{FRONTEND_BASE_URL}}",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"auth",
+												"login",
+												"{provider}"
+											],
+											"query": [
+												{
+													"key": "redirect",
+													"value": "{{FRONTEND_BASE_URL}}"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "provider: microsoft",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}"
+												},
+												"url": {
+													"raw": "{{API_BASE_URL}}/auth/login/microsoft?redirect={{FRONTEND_BASE_URL}}",
+													"host": [
+														"{{API_BASE_URL}}"
+													],
+													"path": [
+														"auth",
+														"login",
+														"microsoft"
+													],
+													"query": [
+														{
+															"key": "redirect",
+															"value": "{{FRONTEND_BASE_URL}}"
+														}
+													]
+												}
+											},
+											"_postman_previewlanguage": null,
+											"header": null,
+											"cookie": [],
+											"body": null
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "system",
+							"item": [
+								{
+									"name": "Healthcheck",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"john.doe@email.com\",\r\n    \"password\": \"Test@123\"\r\n}"
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/system/health",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"system",
+												"health"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "Get user profile",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Cookie",
+												"value": "sid={{COOKIE_SESSION_ID}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{API_BASE_URL}}/user/profile",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"user",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update user profile",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "familyName",
+													"value": "Doe",
+													"type": "text"
+												},
+												{
+													"key": "givenName",
+													"value": "John",
+													"type": "text"
+												},
+												{
+													"key": "locale",
+													"value": "pt-BR",
+													"type": "text"
+												},
+												{
+													"key": "theme",
+													"value": "light",
+													"type": "text"
+												},
+												{
+													"key": "timezone",
+													"value": "UTC",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{API_BASE_URL}}/user/profile",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"user",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Logoff user",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Cookie",
+												"value": "sid={{COOKIE_SESSION_ID}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{API_BASE_URL}}/user/logoff",
+											"host": [
+												"{{API_BASE_URL}}"
+											],
+											"path": [
+												"user",
+												"logoff"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "COOKIE_SESSION_ID",
+			"value": "sid",
+			"type": "string"
+		},
+		{
+			"key": "API_BASE_URL",
+			"value": "http://localhost:4000",
+			"type": "string"
+		},
+		{
+			"key": "FRONTEND_BASE_URL",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

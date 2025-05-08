@@ -21,7 +21,7 @@ export function ValidateRequest<T extends Partial<Request> = Partial<Request>>(
 }
 
 class ValidateRequestInterceptor implements NestInterceptor {
-  constructor(readonly schema: Joi.ObjectSchema) {}
+  constructor(readonly schema: Joi.ObjectSchema<any>) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request: Request = context.switchToHttp().getRequest();
@@ -32,6 +32,7 @@ class ValidateRequestInterceptor implements NestInterceptor {
       headers: request.headers,
       body: request.body,
       file: request.file,
+      files: request.files,
     };
 
     const {error, value} = this.schema.validate(data, {
@@ -47,7 +48,7 @@ class ValidateRequestInterceptor implements NestInterceptor {
     Object.assign(request.params, value.params ?? request.params);
     Object.assign(request.query, value.query ?? request.query);
     Object.assign(request.headers, value.headers ?? request.headers);
-    Object.assign(request.body, value.body ?? request.body);
+    Object.assign(request.body ?? {}, value.body ?? request.body);
 
     return next.handle();
   }

@@ -28,13 +28,12 @@ export class SessionService {
     const session: TSession = {
       id: uuidv7(),
       updatedAt: new Date(),
-      ssoProvider: ssoProvider || null,
-      refreshToken: openidToken?.refresh_token || null,
+      ssoProvider: ssoProvider,
+      refreshToken: openidToken?.refresh_token,
       userId: user.id,
     };
     const key = [this.cacheUserKey, user.id, this.sessionEnv.prefix, session.id].join(':');
-    const stringfied = JSON.stringify(session);
-    await this.cacheService.set(key, stringfied, expiresInSeconds);
+    await this.cacheService.set(key, session, expiresInSeconds);
     return session;
   }
 
