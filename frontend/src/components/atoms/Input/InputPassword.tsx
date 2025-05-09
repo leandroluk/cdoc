@@ -1,7 +1,7 @@
-import {cn} from '#/components/utils';
+import {cn} from '#/utils';
 import React from 'react';
 import {type FieldError} from 'react-hook-form';
-import {PiEye, PiEyeClosed} from 'react-icons/pi';
+import {PiEyeClosedDuotone, PiEyeDuotone} from 'react-icons/pi';
 
 namespace InputPassword {
   export type Props = Omit<React.ComponentProps<'input'>, 'type'> & {
@@ -32,7 +32,7 @@ function InputPassword({
         onClick={() => setVisible(value => !value)}
         tabIndex={-1}
       >
-        {visible ? <PiEyeClosed className="size-5" /> : <PiEye className="size-5" />}
+        {visible ? <PiEyeClosedDuotone className="size-5" /> : <PiEyeDuotone className="size-5" />}
       </button>
     </label>
   );

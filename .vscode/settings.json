@@ -12,7 +12,11 @@
     "source.removeUnusedImports": "always",
     "source.sortImports": "always"
   },
-  "editor.rulers": [80, 100, 120],
+  "editor.rulers": [
+    80,
+    100,
+    120
+  ],
   // files
   "files.encoding": "utf8",
   "files.eol": "\n",
@@ -32,7 +36,10 @@
   // git
   "git.inputValidation": false,
   // jestrunner
-  "jestrunner.runOptions": ["--testTimeout=999999", "--detectOpenHandles"],
+  "jestrunner.runOptions": [
+    "--testTimeout=999999",
+    "--detectOpenHandles"
+  ],
   // javascript
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
   "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
@@ -54,6 +61,13 @@
   // barrelr
   "barrelr.lineEnding": "LF",
   "barrelr.useDoubleQuotes": false,
-  "barrelr.useSemiColons": true
-  // icons
+  "barrelr.useSemiColons": true,
+  // tailwind
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    "class:list",
+    ".*ClassName"
+  ],
 }

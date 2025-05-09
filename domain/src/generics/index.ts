@@ -1,3 +1,4 @@
+export * from './async-function';
 export * from './creatable';
 export * from './indexable';
 export * from './openid';

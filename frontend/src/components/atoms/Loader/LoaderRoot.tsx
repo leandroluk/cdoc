@@ -1,6 +1,6 @@
-import {cn} from '#/components/utils';
+import {cn} from '#/utils';
 import React from 'react';
-import {PiSpinnerGap} from 'react-icons/pi';
+import {PiSpinnerGapDuotone} from 'react-icons/pi';
 
 namespace LoaderRoot {
   export type Props = React.ComponentProps<'div'>;
@@ -8,7 +8,7 @@ namespace LoaderRoot {
 function LoaderRoot({className, ...props}: LoaderRoot.Props) {
   return (
     <div className={cn('flex justify-center items-center', className)} {...props}>
-      <PiSpinnerGap className="size-8 animate-spin-steps" />
+      <PiSpinnerGapDuotone className="size-8 animate-spin-steps" />
     </div>
   );
 }

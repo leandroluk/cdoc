@@ -1,4 +1,4 @@
-import {cn} from '#/components/utils';
+import {cn} from '#/utils';
 import React from 'react';
 import {type FieldError} from 'react-hook-form';
 import ReactInputMask from 'react-input-mask';

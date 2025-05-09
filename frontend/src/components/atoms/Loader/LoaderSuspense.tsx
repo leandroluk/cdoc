@@ -1,4 +1,4 @@
-import {cn} from '#/components/utils';
+import {cn} from '#/utils';
 import {type HTMLMotionProps, motion} from 'framer-motion';
 import React from 'react';
 import LoaderRoot from './LoaderRoot';

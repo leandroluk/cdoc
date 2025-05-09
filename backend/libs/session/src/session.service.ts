@@ -18,6 +18,9 @@ export class SessionService {
   async get(sessionId: string): Promise<TSession | null> {
     const key = [this.cacheUserKey, '*', this.sessionEnv.prefix, sessionId].join(':');
     const session = await this.cacheService.get<TSession>(key);
+    if (session) {
+      await this.cacheService.refresh(key, ms(this.sessionEnv.accessTtl));
+    }
     return session;
   }
 

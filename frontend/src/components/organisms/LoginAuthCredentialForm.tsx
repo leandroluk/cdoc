@@ -6,11 +6,11 @@ import {messages} from 'joi-translation-pt-br';
 import React from 'react';
 import {useForm} from 'react-hook-form';
 import {useNavigate, useSearchParams} from 'react-router';
+import {cn} from '../../utils';
 import Button from '../atoms/Button';
 import Form from '../atoms/Form';
 import Input from '../atoms/Input';
 import Toast from '../atoms/Toast';
-import {cn} from '../utils';
 
 const schema = Joi.object<TLoginAuthCredential.Data.Body>({
   email: TLoginAuthCredential.Data.Body.schema.extract('email').label('Email'),

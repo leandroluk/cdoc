@@ -1,3 +1,4 @@
+import {dedupe} from '#/utils';
 import {type TGetUserProfile, type TUpdateUserProfile} from '@cdoc/domain';
 import Axios from 'axios';
 
@@ -8,8 +9,10 @@ const axios = Axios.create({
 
 const userService = {
   async getUserProfile(): Promise<TGetUserProfile.Result> {
-    const {data} = await axios.get<TGetUserProfile.Result>('/user/profile');
-    return data;
+    return dedupe('getUserProfile', async () => {
+      const {data} = await axios.get<TGetUserProfile.Result>('/user/profile');
+      return data;
+    });
   },
   async logoffUser(): Promise<void> {
     await axios.post('/user/logoff');

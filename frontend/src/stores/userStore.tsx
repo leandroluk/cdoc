@@ -1,5 +1,6 @@
 import userService from '#/services/userService';
-import {type TProfile, type TUpdateUserProfile} from '@cdoc/domain';
+import {setCookie} from '#/utils';
+import {COOKIE_THEME_VALUE, type TProfile, type TUpdateUserProfile} from '@cdoc/domain';
 import {create} from 'zustand';
 
 type State = {
@@ -15,17 +16,21 @@ type Actions = {
 export const userStore = create<State & Actions>((set, get) => ({
   loading: null,
   profile: null,
+
   async getProfile() {
     set({loading: 'getProfile'});
     try {
-      const {profile} = get();
+      let {profile} = get();
       if (!profile) {
-        set({profile: await userService.getUserProfile()});
+        profile = await userService.getUserProfile();
+        setCookie(COOKIE_THEME_VALUE, profile.theme);
+        set({profile});
       }
     } finally {
       set({loading: null});
     }
   },
+
   async updateUserProfile(profile) {
     set({loading: 'updateUserProfile'});
     try {

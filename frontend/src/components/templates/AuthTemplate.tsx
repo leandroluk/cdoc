@@ -1,7 +1,7 @@
 import packageJson from 'package.json';
 import React from 'react';
 import {Outlet} from 'react-router';
-import {cn} from '../utils';
+import {cn} from '../../utils';
 
 namespace AuthTemplate {
   export type Props = React.ComponentProps<'main'>;

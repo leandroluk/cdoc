@@ -19,7 +19,7 @@ export class SessionEnv {
 
   @EnvProperty({
     name: 'LIBS_SESSION_ACCESS_TTL',
-    schema: Joi.string().default('4h'),
+    schema: Joi.string().default('1h'),
   })
   accessTtl: ms.StringValue;
 

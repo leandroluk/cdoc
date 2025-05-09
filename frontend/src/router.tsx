@@ -6,13 +6,18 @@ import LogoffPage from './components/pages/LogoffPage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import RecoverPage from './components/pages/RecoverPage';
 import AuthTemplate from './components/templates/AuthTemplate';
+import PrivateTemplate from './components/templates/PrivateTemplate';
 import {ROUTES} from './constants';
 
 const router = createBrowserRouter([
   {
     path: ROUTES.DASHBOARD,
     index: true,
-    element: <Loader.Suspense children={React.lazy(() => import('#/components/pages/DashboardPage'))} />,
+    element: (
+      <PrivateTemplate>
+        <Loader.Suspense children={React.lazy(() => import('#/components/pages/DashboardPage'))} />
+      </PrivateTemplate>
+    ),
   },
   {path: ROUTES.LOGIN, element: <AuthTemplate children={<LoginPage />} />},
   {path: ROUTES.LOGOFF, element: <AuthTemplate children={<LogoffPage />} />},

@@ -51,4 +51,8 @@ export class CacheService {
   async has(key: string): Promise<boolean> {
     return Boolean(await this.cacheClient.exists(key));
   }
+
+  async refresh(key: string, expiresInSeconds: number): Promise<void> {
+    await this.cacheClient.expire(key, expiresInSeconds);
+  }
 }
