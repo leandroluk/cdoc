@@ -1,3 +1,4 @@
+import toastProps from './toastProps';
 import ToastWrapper from './ToastWrapper';
 import useToastStore, {type ToastItem} from './useToastStore';
 
@@ -14,6 +15,10 @@ const Toast = Object.assign(ToastWrapper, {
   show: useToastStore.getState().show,
   success: useToastStore.getState().success,
   warning: useToastStore.getState().warning,
+  /**
+   * Default toast props based on http status code
+   */
+  toastProps,
 });
 
 export default Toast;

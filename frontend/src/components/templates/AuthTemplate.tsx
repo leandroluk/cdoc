@@ -15,13 +15,13 @@ function AuthTemplate({children = <Outlet />, className, ...props}: AuthTemplate
             className="fill-primary"
             d="M22.16,10.86a11.3,11.3,0,1,0,11.3,11.3,11.31,11.31,0,0,0-11.3-11.3m0,33.46A22.16,22.16,0,1,1,44.32,22.16,22.18,22.18,0,0,1,22.16,44.32"
           />
-          <path className="fill-primary-content" d="M28.25,22.16a6.09,6.09,0,1,0-6.09,6.08,6.09,6.09,0,0,0,6.09-6.08" />
+          <path className="fill-base-content" d="M28.25,22.16a6.09,6.09,0,1,0-6.09,6.08,6.09,6.09,0,0,0,6.09-6.08" />
         </svg>
 
         <h1 className="font-semibold text-xl text-base-content">{packageJson.displayName}</h1>
       </header>
 
-      <main className={cn('bg-base-100 p-6 flex flex-col min-w-sm rounded-lg', className)} {...props}>
+      <main className={cn('bg-base-100 p-6 flex flex-col md:w-sm rounded-lg', className)} {...props}>
         {children}
       </main>
 
@@ -30,7 +30,7 @@ function AuthTemplate({children = <Outlet />, className, ...props}: AuthTemplate
         <a href="https://www.oppem.com.br/" target="_blank" className="underline">
           Oppem
         </a>{' '}
-        . Todos os direitos reservados
+        . Todos os direitos reservados.
       </footer>
     </div>
   );

@@ -3,19 +3,14 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/api/src",
   "defaultLibraryPrefix": "libs",
+  "monorepo": true,
+  "root": "apps/api",
   "compilerOptions": {
-    "watchAssets": true,
     "deleteOutDir": true,
     "webpack": true,
     "plugins": [
       {
         "name": "@nestjs/swagger"
-      }
-    ],
-    "assets": [
-      {
-        "include": "**/*.hbs",
-        "watchAssets": true
       }
     ],
     "tsConfigPath": "apps/api/tsconfig.app.json"
@@ -120,7 +115,5 @@
         "tsConfigPath": "libs/storage/tsconfig.lib.json"
       }
     }
-  },
-  "monorepo": true,
-  "root": "apps/api"
+  }
 }

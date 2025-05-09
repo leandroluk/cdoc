@@ -17,17 +17,6 @@ const schema = Joi.object<TLoginAuthCredential.Data.Body>({
   password: TLoginAuthCredential.Data.Body.schema.extract('password').label('Senha'),
 });
 
-const toastProps: Record<number, Toast.Item> = {
-  401: {
-    title: 'Não autorizado',
-    description: 'Credenciais inválidas',
-  },
-  500: {
-    title: 'Oops... Ocorreu um erro',
-    description: 'Entre em contato com o suporte',
-  },
-};
-
 function LoginAuthCredentialForm() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -49,10 +38,10 @@ function LoginAuthCredentialForm() {
           localStorage.setItem('remember', btoa(JSON.stringify(data)));
         }
         setLoading(true);
-        await authService.loginAuthCredential({body: data});
+        await authService.loginAuthCredential(data);
         await navigate(searchParams.get('redirect') ?? '/', {replace: true});
       } catch (error: any) {
-        Toast.error(toastProps[error.status] ?? toastProps[500]);
+        Toast.error(Toast.toastProps[error.status] ?? Toast.toastProps[500]);
       } finally {
         setLoading(false);
       }
@@ -75,7 +64,7 @@ function LoginAuthCredentialForm() {
   }, [form]);
 
   return (
-    <Form onSubmit={form.handleSubmit(handler)} className="flex flex-col gap-2">
+    <Form onSubmit={form.handleSubmit(handler)} className="flex flex-col">
       <Form.Control error={form.formState.errors.email}>
         <Form.Label>Email</Form.Label>
         <Input className="bg-base-200" placeholder="john.doe@email.com" {...form.register('email')} />
@@ -83,7 +72,12 @@ function LoginAuthCredentialForm() {
       </Form.Control>
 
       <Form.Control error={form.formState.errors.password}>
-        <Form.Label>Senha</Form.Label>
+        <Form.Label className="flex flex-row justify-between">
+          <span>Senha</span>
+          <a href="/recover?otp" className="btn btn-sm btn-link p-0 m-0 h-auto">
+            Recuperar senha
+          </a>
+        </Form.Label>
         <Input.Password className="bg-base-200" placeholder="********" {...form.register('password')} />
         <Form.Description />
       </Form.Control>

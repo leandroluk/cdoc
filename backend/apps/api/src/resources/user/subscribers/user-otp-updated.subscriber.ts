@@ -9,17 +9,12 @@ export class UserOtpUpdatedSubscriber implements TStream.Subscriber<UserOtpUpdat
 
   @Idempotent()
   @SubscribeEvent(UserOtpUpdatedEvent)
-  async handle({payload}: UserOtpUpdatedEvent, done: (err?: Error) => Promise<void>): Promise<void> {
-    try {
-      await this.mailerService.sendEmail({
-        subject: 'One Time Password (OTP)',
-        to: [payload.email],
-        template: 'otp',
-        context: {code: payload.Otp.code},
-      });
-      await done();
-    } catch (error) {
-      await done(error);
-    }
+  async handle({payload}: UserOtpUpdatedEvent): Promise<void> {
+    await this.mailerService.sendEmail({
+      subject: 'One Time Password (OTP)',
+      to: [payload.email],
+      template: 'otp',
+      context: {code: payload.Otp.code},
+    });
   }
 }

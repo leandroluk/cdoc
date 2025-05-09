@@ -8,7 +8,7 @@ function SocialLogin() {
     <div className="flex flex-col gap-2">
       <a
         href={`${import.meta.env.VITE_BACKEND_API_URL}/auth/login/microsoft?redirect=${url}`}
-        className="btn btn-soft items-center justify-center gap-4"
+        className="btn btn-soft btn-primary items-center justify-center gap-4"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" className="size-4">
           <path className="fill-[#f25022]" d="M1 1h9v9H1z" />

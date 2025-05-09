@@ -1,8 +1,9 @@
 import {userStore} from '#/stores/userStore';
-import {cn, getCookie, setCookie} from '#/utils';
+import {cn, getCookie} from '#/utils';
 import {COOKIE_THEME_VALUE, ETheme} from '@cdoc/domain';
 import React from 'react';
 import {PiComputerTowerDuotone, PiMoonDuotone, PiSunDuotone} from 'react-icons/pi';
+import setDocumentTheme from './setDocumentTheme';
 
 function getSystemTheme(): ETheme {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? ETheme.Dark : ETheme.Light;
@@ -11,17 +12,17 @@ function getSystemTheme(): ETheme {
 const themeMap = {
   [ETheme.Dark]: (
     <>
-      <PiMoonDuotone /> Dark
+      <PiMoonDuotone /> Escuro
     </>
   ),
   [ETheme.Light]: (
     <>
-      <PiSunDuotone /> Light
+      <PiSunDuotone /> Claro
     </>
   ),
   [ETheme.System]: (
     <>
-      <PiComputerTowerDuotone /> System
+      <PiComputerTowerDuotone /> Sistema
     </>
   ),
 };
@@ -37,14 +38,12 @@ function ThemeToggle({className, btnClassName, btnActiveClassName, ...props}: Th
   const [theme, setTheme] = React.useState<ETheme>(ETheme.System);
 
   React.useLayoutEffect(() => {
-    const saved = getCookie(COOKIE_THEME_VALUE) as ETheme | null;
+    const saved = getCookie<ETheme>(COOKIE_THEME_VALUE);
     setTheme(profileTheme ? profileTheme : saved || ETheme.System);
   }, [profileTheme]);
 
   React.useLayoutEffect(() => {
-    const appliedTheme = theme === ETheme.System ? getSystemTheme() : theme;
-    document.documentElement.setAttribute('data-theme', appliedTheme);
-    setCookie(COOKIE_THEME_VALUE, theme);
+    setDocumentTheme(theme === ETheme.System ? getSystemTheme() : theme);
   }, [theme]);
 
   return (

@@ -7,6 +7,7 @@ namespace InputPassword {
   export type Props = Omit<React.ComponentProps<'input'>, 'type'> & {
     error?: FieldError;
     inputClassName?: React.ComponentProps<'input'>['className'];
+    initialVisible?: boolean;
   };
 }
 function InputPassword({
@@ -14,9 +15,10 @@ function InputPassword({
   inputClassName,
   autoComplete = 'one-time-code',
   error,
+  initialVisible = false,
   ...props
 }: InputPassword.Props) {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(initialVisible);
 
   return (
     <label className={cn('input input-bordered flex items-center gap-2', error && 'input-error', className)}>
@@ -30,7 +32,6 @@ function InputPassword({
         type="button"
         className="text-sm opacity-50 hover:opacity-100 transition-opacity"
         onClick={() => setVisible(value => !value)}
-        tabIndex={-1}
       >
         {visible ? <PiEyeClosedDuotone className="size-5" /> : <PiEyeDuotone className="size-5" />}
       </button>

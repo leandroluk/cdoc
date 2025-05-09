@@ -1,13 +1,11 @@
-import {ERole, TOtp, TOtpAuth, TUser} from '@cdoc/domain';
-import {Injectable} from '@nestjs/common';
-import crypto from 'crypto';
+import {TOtp, TOtpAuth, TUser} from '@cdoc/domain';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {CommonEnv} from 'libs/common';
 import {CryptoService} from 'libs/crypto';
-import {CredentialEntity, DatabaseService, OtpEntity, ProfileEntity, UserEntity} from 'libs/database';
+import {DatabaseService, OtpEntity, UserEntity} from 'libs/database';
 import {StreamService, UserOtpUpdatedEvent} from 'libs/stream';
 import ms from 'ms';
 import {EntityManager} from 'typeorm';
-import {uuidv7} from 'uuidv7';
 
 @Injectable()
 export class OtpAuthService implements TOtpAuth {
@@ -19,40 +17,9 @@ export class OtpAuthService implements TOtpAuth {
   ) {}
 
   protected async getUser(entityManager: EntityManager, email: TUser['email']): Promise<TUser> {
-    let user = await entityManager.getRepository(UserEntity).findOne({where: {email}});
+    const user = await entityManager.getRepository(UserEntity).findOne({where: {email}});
     if (!user) {
-      const now = new Date();
-      user = await entityManager.getRepository(UserEntity).save({
-        id: uuidv7(),
-        updatedAt: now,
-        createdAt: now,
-        removedAt: null,
-        email,
-        kind: ERole.Member,
-        Otp: entityManager.getRepository(OtpEntity).create({
-          id: uuidv7(),
-          updatedAt: now,
-          expiresAt: new Date(Date.now() + ms(this.commonEnv.otpExpiresTime)),
-          code: crypto.randomUUID().replace(/\W/g, '').toUpperCase().slice(0, 6),
-        }),
-        Credential: entityManager.getRepository(CredentialEntity).create({
-          id: uuidv7(),
-          updatedAt: now,
-          password: this.cryptoService.createHash(crypto.randomUUID().replace(/\W/g, '-').slice(0, 50)),
-          isActive: false,
-        }),
-        Profile: entityManager.getRepository(ProfileEntity).create({
-          id: uuidv7(),
-          updatedAt: now,
-          givenName: null,
-          familyName: null,
-          picture: null,
-          cover: null,
-          locale: this.commonEnv.userDefaultLocale,
-          theme: this.commonEnv.userDefaultTheme,
-          timezone: 'UTC',
-        }),
-      });
+      throw new NotFoundException('Could not find a user for receive email');
     }
     return user;
   }

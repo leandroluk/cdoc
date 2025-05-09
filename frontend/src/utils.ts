@@ -18,9 +18,9 @@ export function cn(...inputs: Array<ClassValue>): string {
  * This function searches for a cookie by its name and returns the decoded value if found,
  * or `null` if the cookie does not exist.
  */
-export function getCookie(name: string): string | null {
+export function getCookie<T = string>(name: string): T | null {
   const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : null;
+  return match ? (decodeURIComponent(match[1]) as T) : null;
 }
 
 /**
