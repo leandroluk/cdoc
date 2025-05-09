@@ -42,9 +42,9 @@
       "name": "frontend",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "https://localhost:3000",
       "cwd": "${workspaceFolder}/frontend",
-      "outputCapture": "std"
+      "preLaunchTask": "frontend"
     },
     // file
     {
