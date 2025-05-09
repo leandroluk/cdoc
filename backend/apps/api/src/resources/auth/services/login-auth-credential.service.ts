@@ -1,16 +1,13 @@
 import {TLoginAuthCredential, TOtp, TUser, type TCredential} from '@cdoc/domain';
 import {Injectable, NotAcceptableException, UnauthorizedException} from '@nestjs/common';
-import {CommonEnv} from 'libs/common';
 import {CryptoService} from 'libs/crypto';
 import {DatabaseService, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
 import {StreamService, UserOtpUpdatedEvent} from 'libs/stream';
-import ms from 'ms';
 
 @Injectable()
 export class LoginAuthCredentialService implements TLoginAuthCredential {
   constructor(
-    private readonly commonEnv: CommonEnv,
     private readonly databaseService: DatabaseService,
     private readonly cryptoService: CryptoService,
     private readonly streamService: StreamService,
@@ -43,7 +40,7 @@ export class LoginAuthCredentialService implements TLoginAuthCredential {
       }
       const password = this.cryptoService.createHash(data.body.password);
       if (password === credential.password) {
-        const {id} = await this.sessionService.create(user, ms(this.commonEnv.refreshTtl));
+        const {id} = await this.sessionService.create(user);
         return {id};
       }
     }

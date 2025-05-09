@@ -24,13 +24,13 @@ export class AppEnv {
 
   @EnvProperty({
     name: 'APPS_API_CERT',
-    schema: Joi.string().required().custom(value => value.replace(/\\n/g, '\n')), // prettier-ignore
+    schema: Joi.string().required(),
   })
   cert: string;
 
   @EnvProperty({
     name: 'APPS_API_KEY',
-    schema: Joi.string().required().custom(value => value.replace(/\\n/g, '\n')), // prettier-ignore
+    schema: Joi.string().required(),
   })
   key: string;
 }

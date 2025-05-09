@@ -1,6 +1,6 @@
 import {type TCreatable, type TIndexable, type TRemovable, type TUpdatable} from '#/generics';
 import {Swagger} from '#/swagger';
-import {type TProject} from './project';
+import {type TWorkspace} from './workspace';
 
 export type TSupplier = TSupplier.System & TSupplier.Fields & TSupplier.Relations;
 export namespace TSupplier {
@@ -37,7 +37,7 @@ export namespace TSupplier {
   };
   export type Relations = {
     /** @type {Project(id)} */
-    projectId: TProject['id'];
+    workspaceId: TWorkspace['id'];
   };
   export const swagger = Swagger.object<TSupplier>({
     required: [
@@ -59,7 +59,7 @@ export namespace TSupplier {
       'greendocsResponsible',
       'greendocsInAttentionBy',
       'greendocsSituation',
-      'projectId',
+      'workspaceId',
     ],
     properties: {
       id: Swagger.integer({description: "Supplier's primary key"}),
@@ -80,7 +80,7 @@ export namespace TSupplier {
       greendocsResponsible: Swagger.string({description: "Extracted 'responsible' from greendocs"}),
       greendocsInAttentionBy: Swagger.date({description: "Extracted 'in attention by' from greendocs"}),
       greendocsSituation: Swagger.string({description: "Extracted 'situation' from greendocs"}),
-      projectId: Swagger.uuid({description: "Project's foreign key related with of Supplier"}),
+      workspaceId: Swagger.uuid({description: "Workspace's foreign key related with of Supplier"}),
     },
   });
 }

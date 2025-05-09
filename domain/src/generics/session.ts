@@ -11,6 +11,7 @@ export namespace TSession {
   export type Fields = {
     ssoProvider?: EProvider;
     refreshToken?: TOpenid.Token['refresh_token'];
+    limitTtl: Date;
   };
   export type Relations = {
     userId: TUser['id'];
@@ -23,6 +24,7 @@ export namespace TSession {
       userId: Swagger.uuid({description: "User's reference related with Session"}),
       refreshToken: Swagger.string({description: 'Refresh token related with sso provider'}),
       ssoProvider: Swagger.string({description: 'Provider related with refresh token'}),
+      limitTtl: Swagger.date({description: 'Time limit to session exists'}),
     },
   });
 }

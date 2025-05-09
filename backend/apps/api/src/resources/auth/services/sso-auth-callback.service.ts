@@ -5,7 +5,6 @@ import {CommonEnv} from 'libs/common';
 import {DatabaseService, ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
 import {StorageService} from 'libs/storage';
-import ms from 'ms';
 import {Readable} from 'node:stream';
 import {EntityManager} from 'typeorm';
 import {uuidv7} from 'uuidv7';
@@ -119,12 +118,7 @@ export class SsoAuthCallbackService implements TSsoAuthCallback {
         authProvider.getOpenidPicture(openidToken.access_token),
       ]);
       const {user} = await this.upsertUser(entityManager, openidInfo, data.params.provider, openidPicture);
-      const session = await this.sessionService.create(
-        user,
-        ms(this.commonEnv.refreshTtl),
-        data.params.provider,
-        openidToken
-      );
+      const session = await this.sessionService.create(user, data.params.provider, openidToken);
       return {id: session.id, redirect: redirect.toString()};
     });
   }

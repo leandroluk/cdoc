@@ -1,9 +1,9 @@
-import {TProject} from '@cdoc/domain';
+import {TWorkspace} from '@cdoc/domain';
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {Cron, CronExpression} from '@nestjs/schedule';
 import {subDays, subHours} from 'date-fns';
-import {DatabaseService, ProjectEntity} from 'libs/database';
+import {DatabaseService, WorkspaceEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {IsNull, LessThan, MoreThan, Not, Or} from 'typeorm';
 import * as workers from './workers';
@@ -22,38 +22,38 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
   }
 
   protected async shouldExtracProject(): Promise<boolean> {
-    const count = await this.databaseService.getRepository(ProjectEntity).count({
+    const count = await this.databaseService.getRepository(WorkspaceEntity).count({
       where: {updatedAt: MoreThan(subDays(new Date(), 1))},
     });
     return !count;
   }
 
-  protected async getProjectToExtractSupplier(referenceDate: Date): Promise<TProject | undefined> {
-    const project = await this.databaseService.getRepository(ProjectEntity).findOne({
+  protected async getWorkspaceToExtractSupplier(referenceDate: Date): Promise<TWorkspace | undefined> {
+    const workspace = await this.databaseService.getRepository(WorkspaceEntity).findOne({
       where: {
         suppliersExtractionAt: Or(IsNull(), LessThan(referenceDate)),
         submenuSelector: Not(IsNull()),
       },
     });
-    if (project) {
-      return project;
+    if (workspace) {
+      return workspace;
     }
   }
 
   @Cron(CronExpression.EVERY_HOUR)
   async run(): Promise<void> {
     if (await this.shouldExtracProject()) {
-      await this.moduleRef.get(workers.ProjectWorker).run();
+      await this.moduleRef.get(workers.WorkspaceWorker).run();
     }
-    this.loggerService.log('Starting project extraction');
+    this.loggerService.log('Starting Workspace extraction');
 
     const reference = subHours(new Date(), 1);
     while (true) {
-      const project = await this.getProjectToExtractSupplier(reference);
-      if (!project) {
+      const workspace = await this.getWorkspaceToExtractSupplier(reference);
+      if (!workspace) {
         break;
       }
-      await this.moduleRef.get(workers.SupplierWorker).run(project);
+      await this.moduleRef.get(workers.SupplierWorker).run(workspace);
     }
     this.loggerService.log(`Extraction finished using reference ${reference.toJSON()}`);
   }

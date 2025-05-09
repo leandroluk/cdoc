@@ -22,11 +22,11 @@ export class CreateTableSupplier1746630922178 implements MigrationInterface {
         "greendocs_responsible"     text           not null default '',
         "greendocs_in_attention_by" text           not null default '',
         "greendocs_situation"       text           not null default '',
-        "project_id"                uuid           not null,
+        "workspace_id"              uuid           not null,
         --
         unique      ("greendocs_doc_id"),
         primary key ("id"),
-        foreign key ("project_id") references "project" ("id") on update cascade on delete cascade
+        foreign key ("workspace_id") references "workspace" ("id") on update cascade on delete cascade
       );
     `);
   }

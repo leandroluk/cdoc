@@ -1,6 +1,8 @@
 import {TOpenid, TSso, TUser, type TSession} from '@cdoc/domain';
 import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {addMilliseconds} from 'date-fns';
 import {CacheService} from 'libs/cache';
+import ms from 'ms';
 import {uuidv7} from 'uuidv7';
 import {SessionEnv} from './session.env';
 
@@ -19,29 +21,25 @@ export class SessionService {
     return session;
   }
 
-  async create(
-    user: TUser,
-    expiresInSeconds: number,
-    ssoProvider?: TSso['provider'],
-    openidToken?: TOpenid.Token
-  ): Promise<TSession> {
+  async create(user: TUser, ssoProvider?: TSso['provider'], openidToken?: TOpenid.Token): Promise<TSession> {
     const session: TSession = {
       id: uuidv7(),
       updatedAt: new Date(),
       ssoProvider: ssoProvider,
       refreshToken: openidToken?.refresh_token,
       userId: user.id,
+      limitTtl: addMilliseconds(new Date(), ms(this.sessionEnv.limitTtl)),
     };
     const key = [this.cacheUserKey, user.id, this.sessionEnv.prefix, session.id].join(':');
-    await this.cacheService.set(key, session, expiresInSeconds);
+    await this.cacheService.set(key, session, ms(this.sessionEnv.accessTtl) / 1000);
     return session;
   }
 
-  async update(user: TUser, sessionId: string, expiresInSeconds?: number): Promise<void> {
+  async update(user: TUser, sessionId: string): Promise<void> {
     const key = [this.cacheUserKey, user.id, this.sessionEnv.prefix, sessionId].join(':');
     const session = await this.cacheService.get<TSession>(key);
-    if (session) {
-      return await this.cacheService.set(key, {...session, user}, expiresInSeconds);
+    if (session && session.limitTtl > new Date()) {
+      return await this.cacheService.set(key, {...session, user}, ms(this.sessionEnv.accessTtl) / 1000);
     }
     throw new UnauthorizedException();
   }

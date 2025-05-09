@@ -6,6 +6,6 @@ export * from './1746626545853-CreateTypeTheme';
 export * from './1746626626624-CreateTableProfile';
 export * from './1746626863251-CreateTableOtp';
 export * from './1746626953007-CreateTableCredential';
-export * from './1746630712247-CreateTableProject';
+export * from './1746630712247-CreateTableWorkspace';
 export * from './1746630922178-CreateTableSupplier';
 export * from './1746665061774-SeedUserWithReferences';

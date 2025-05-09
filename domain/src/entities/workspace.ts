@@ -1,8 +1,8 @@
 import {type TCreatable, type TIndexable, type TRemovable, type TUpdatable} from '#/generics';
 import {Swagger} from '#/swagger';
 
-export type TProject = TProject.System & TProject.Fields;
-export namespace TProject {
+export type TWorkspace = TWorkspace.System & TWorkspace.Fields;
+export namespace TWorkspace {
   export type System = TIndexable & TUpdatable & TCreatable & TRemovable;
   export type Fields = {
     /** @type {URL} */
@@ -20,7 +20,7 @@ export namespace TProject {
     /** @type {VARCHAR[100]} */
     greendocsName: string;
   };
-  export const swagger = Swagger.object<TProject>({
+  export const swagger = Swagger.object<TWorkspace>({
     required: [
       'id',
       'updatedAt',
@@ -34,15 +34,15 @@ export namespace TProject {
       'greendocsName',
     ],
     properties: {
-      id: Swagger.uuid({description: "Project's primary key"}),
-      updatedAt: Swagger.date({description: "Project's update date"}),
-      createdAt: Swagger.date({description: "Project's creation date"}),
-      removedAt: Swagger.date({description: "Project's removedAt date"}),
-      link: Swagger.url({description: "Project's link in greendocs"}),
-      submenuSelector: Swagger.string({description: "Project's HTML selector of submenu in sidebar"}),
-      suppliersExtractionAt: Swagger.date({description: "Project's extraction date"}),
-      suppliersViewLink: Swagger.url({description: "Project's Link to page with supplier list"}),
-      reserveViewLink: Swagger.url({description: "Project's link to page related reserve list"}),
+      id: Swagger.uuid({description: "Workspace's primary key"}),
+      updatedAt: Swagger.date({description: "Workspace's update date"}),
+      createdAt: Swagger.date({description: "Workspace's creation date"}),
+      removedAt: Swagger.date({description: "Workspace's removedAt date"}),
+      link: Swagger.url({description: "Workspace's link in greendocs"}),
+      submenuSelector: Swagger.string({description: "Workspace's HTML selector of submenu in sidebar"}),
+      suppliersExtractionAt: Swagger.date({description: "Workspace's extraction date"}),
+      suppliersViewLink: Swagger.url({description: "Workspace's Link to page with supplier list"}),
+      reserveViewLink: Swagger.url({description: "Workspace's link to page related reserve list"}),
       greendocsId: Swagger.integer({description: "Extracted 'id' from greendocs"}),
       greendocsName: Swagger.string({description: "Extracted 'name' from greendocs"}),
     },

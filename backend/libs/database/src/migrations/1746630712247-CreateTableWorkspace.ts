@@ -1,9 +1,9 @@
 import {type MigrationInterface, type QueryRunner} from 'typeorm';
 
-export class CreateTableProject1746630712247 implements MigrationInterface {
+export class CreateTableWorkspace1746630712247 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      create table "project" (
+      create table "workspace" (
         "id"                      uuid           not null,
         "updated_at"              timestamptz(3) not null default current_timestamp(3),
         "created_at"              timestamptz(3) not null default current_timestamp(3),
@@ -24,7 +24,7 @@ export class CreateTableProject1746630712247 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      drop table "project";  
+      drop table "workspace";  
     `);
   }
 }

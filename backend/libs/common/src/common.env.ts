@@ -25,12 +25,6 @@ export class CommonEnv {
   origin: string;
 
   @EnvProperty({
-    name: 'LIBS_COMMON_ACCESS_TTL',
-    schema: Joi.string().default('10m'),
-  })
-  accessTtl: ms.StringValue;
-
-  @EnvProperty({
     name: 'LIBS_COMMON_USER_DEFAULT_LOCALE',
     schema: Joi.string().default('pt-BR'),
   })
@@ -79,10 +73,4 @@ export class CommonEnv {
     schema: Joi.string().uri().default('http://localhost:3000/recover'),
   })
   recoverUrl: string;
-
-  @EnvProperty({
-    name: 'LIBS_COMMON_REFRESH_TTL',
-    schema: Joi.string().default('14d'),
-  })
-  refreshTtl: ms.StringValue;
 }

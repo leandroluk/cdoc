@@ -1,7 +1,7 @@
-import {TProject, TSupplier} from '@cdoc/domain';
+import {TSupplier, TWorkspace} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {Retry, TimeTrack} from 'libs/common';
-import {DatabaseService, ProjectEntity, SupplierEntity} from 'libs/database';
+import {DatabaseService, SupplierEntity, WorkspaceEntity} from 'libs/database';
 import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
 import {AuthWorker} from './auth.worker';
@@ -24,7 +24,7 @@ export class SupplierWorker extends AuthWorker {
   @TimeTrack()
   @Retry()
   protected async navigateToSuppliersPage(
-    suppliersViewLink: Exclude<TProject['suppliersViewLink'], null>
+    suppliersViewLink: Exclude<TWorkspace['suppliersViewLink'], null>
   ): Promise<void> {
     await Promise.all([
       this.page.goto(suppliersViewLink), //
@@ -145,30 +145,30 @@ export class SupplierWorker extends AuthWorker {
     await repository.createQueryBuilder().insert().values(entity).orUpdate(replaceableList, uniqueList).execute();
   }
 
-  protected async updateProject(project: TProject): Promise<void> {
+  protected async updateWorkspace(workspace: TWorkspace): Promise<void> {
     await this.databaseService //
-      .getRepository(ProjectEntity)
-      .update({id: project.id}, {suppliersExtractionAt: new Date()});
+      .getRepository(WorkspaceEntity)
+      .update({id: workspace.id}, {suppliersExtractionAt: new Date()});
   }
 
   @TimeTrack()
   @Retry()
-  async run(project: TProject): Promise<void> {
-    if (!project.suppliersViewLink) {
+  async run(workspace: TWorkspace): Promise<void> {
+    if (!workspace.suppliersViewLink) {
       return;
     }
     await this.login();
-    await this.navigateToSuppliersPage(project.suppliersViewLink);
+    await this.navigateToSuppliersPage(workspace.suppliersViewLink);
     await this.changePagination();
     await this.loadAllPages();
     const partialSupplierList: Array<Partial<TSupplier>> = await this.extractPartialSupplierList();
     for (const partialSupplier of partialSupplierList) {
-      partialSupplier.projectId = project.id;
+      partialSupplier.workspaceId = workspace.id;
       await this.navigateToSupplierPage(partialSupplier.link as string);
       await this.completeSupplierFromHeader(partialSupplier);
       await this.completeSupplierFromContent(partialSupplier);
       await this.upsertSupplier(partialSupplier);
     }
-    await this.updateProject(project);
+    await this.updateWorkspace(workspace);
   }
 }
