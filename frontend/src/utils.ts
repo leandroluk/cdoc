@@ -1,4 +1,12 @@
-import {type AsyncFunction} from '@cdoc/domain';
+import {
+  type AsyncFunction,
+  NetworkError,
+  NotAcceptableError,
+  ServerError,
+  UnauthorizedError,
+  ValidationError,
+} from '@cdoc/domain';
+import axios, {type AxiosError, type AxiosInstance, type CreateAxiosDefaults} from 'axios';
 import {type ClassValue, clsx} from 'clsx';
 import {twMerge} from 'tailwind-merge';
 
@@ -53,4 +61,40 @@ export function dedupe<T>(key: string, fn: AsyncFunction<T>): Promise<T> {
 }
 export namespace dedupe {
   export const map = new Map<string, Promise<unknown>>();
+}
+
+export function createDomainAxios(options: CreateAxiosDefaults): AxiosInstance {
+  const api = axios.create({withCredentials: true, ...options});
+
+  api.interceptors.request.use(
+    config => config,
+    (error: AxiosError) => Promise.reject(error)
+  );
+
+  api.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || error.message;
+        const ErrorConstructor = createDomainAxios.statusMap[status] || ServerError;
+        throw new ErrorConstructor(message);
+      }
+      if (error.request) {
+        throw new NetworkError();
+      }
+      throw new ServerError(error.message);
+    }
+  );
+
+  return api;
+}
+export namespace createDomainAxios {
+  export const statusMap: Record<number, new (..._: any[]) => Error> = {
+    400: ValidationError,
+    401: UnauthorizedError,
+    406: NotAcceptableError,
+    503: NetworkError,
+    500: ServerError,
+  };
 }

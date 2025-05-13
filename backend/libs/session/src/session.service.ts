@@ -1,5 +1,5 @@
-import {TOpenid, TSso, TUser, type TSession} from '@cdoc/domain';
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {TOpenid, TSso, TUser, UnauthorizedError, type TSession} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import {addMilliseconds} from 'date-fns';
 import {CacheService} from 'libs/cache';
 import ms from 'ms';
@@ -44,7 +44,7 @@ export class SessionService {
     if (session && session.limitTtl > new Date()) {
       return await this.cacheService.set(key, {...session, user}, ms(this.sessionEnv.accessTtl) / 1000);
     }
-    throw new UnauthorizedException();
+    throw new UnauthorizedError();
   }
 
   async delete(sessionId: string): Promise<void> {

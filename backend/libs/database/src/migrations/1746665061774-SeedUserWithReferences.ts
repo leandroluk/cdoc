@@ -38,9 +38,9 @@ export class SeedUserWithReferences1746665061774 implements MigrationInterface {
 
     // profile
     await queryRunner.query(`
-      insert into "profile" ("id", "updated_at", "given_name", "family_name", "picture", "cover", "locale", "theme", "timezone", "user_id") values
-        ('${uuidv7()}', now(), 'John',      'Doe', null, null, 'pt-BR', '${ETheme.Light}',  'UTC', '${this.j.id}'),
-        ('${uuidv7()}', now(),  'Ada', 'Lovelace', null, null, 'en-US', '${ETheme.System}', 'UTC', '${this.a.id}');
+      insert into "profile" ("id", "updated_at", "given_name", "family_name", "picture", "theme", "user_id") values
+        ('${uuidv7()}', now(), 'John',      'Doe', null, '${ETheme.Light}',  '${this.j.id}'),
+        ('${uuidv7()}', now(),  'Ada', 'Lovelace', null, '${ETheme.System}', '${this.a.id}');
     `);
   }
 

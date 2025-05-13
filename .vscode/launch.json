@@ -40,11 +40,21 @@
     // frontend
     {
       "name": "frontend",
-      "type": "chrome",
       "request": "launch",
-      "url": "https://localhost:3000",
+      "type": "node",
       "cwd": "${workspaceFolder}/frontend",
-      "preLaunchTask": "frontend"
+      "runtimeExecutable": "npm",
+      "console": "integratedTerminal",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "https://localhost:3000/",
+        "uriFormat": "https://localhost:3000",
+        "killOnServerStop": true
+      }
     },
     // file
     {

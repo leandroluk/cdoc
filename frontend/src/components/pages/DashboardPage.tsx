@@ -1,14 +1,22 @@
+import {sidebarStore} from '#/stores/sidebarStore';
 import userStore from '#/stores/userStore';
 import Theme from '../atoms/Theme';
+import PageTemplate from '../templates/PageTemplate';
 
 function DashboardPage() {
-  const profile = userStore(state => state.profile);
+  const profile = userStore(state => state.user);
+  const toggleSidebar = sidebarStore(_ => _.toggle);
   return (
-    <div>
-      {DashboardPage.name}
-      <pre>{JSON.stringify(profile, null, 2)}</pre>
-      <Theme.Toggle btnClassName="flex-1" />
-    </div>
+    <PageTemplate>
+      <PageTemplate.Main>
+        {DashboardPage.name}
+        <pre>{JSON.stringify(profile, null, 2)}</pre>
+        <Theme.Toggle btnClassName="flex-1" />
+        <button className="btn btn-primary" onClick={toggleSidebar}>
+          open
+        </button>
+      </PageTemplate.Main>
+    </PageTemplate>
   );
 }
 

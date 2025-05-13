@@ -1,10 +1,7 @@
+import {createDomainAxios} from '#/utils';
 import {type TLoginAuthCredential, type TOtpAuth, type TRecoverAuth} from '@cdoc/domain';
-import Axios from 'axios';
 
-const axios = Axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_API_URL,
-  withCredentials: true,
-});
+const axios = createDomainAxios({baseURL: import.meta.env.VITE_BACKEND_API_URL});
 
 const authService = {
   async loginAuthCredential(body: TLoginAuthCredential.Data.Body): Promise<void> {

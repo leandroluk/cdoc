@@ -1,5 +1,5 @@
-import {COOKIE_SESSION_ID, type TSession} from '@cdoc/domain';
-import {type CanActivate, type ExecutionContext, Injectable, UnauthorizedException} from '@nestjs/common';
+import {COOKIE_SESSION_ID, UnauthorizedError, type TSession} from '@cdoc/domain';
+import {Injectable, type CanActivate, type ExecutionContext} from '@nestjs/common';
 import {type Request} from 'express';
 import {SessionService} from '../session.service';
 
@@ -17,6 +17,6 @@ export class SessionAuthGuard implements CanActivate {
     } catch {
       // ! no need catches it
     }
-    throw new UnauthorizedException('Session expired.');
+    throw new UnauthorizedError('Session expired.');
   }
 }

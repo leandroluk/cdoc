@@ -1,5 +1,5 @@
-import {TOtp, TRecoverAuth, TUser, type TCredential} from '@cdoc/domain';
-import {Injectable, NotAcceptableException, NotFoundException} from '@nestjs/common';
+import {NotAcceptableError, NotFoundError, TOtp, TRecoverAuth, TUser, type TCredential} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import {CryptoService} from 'libs/crypto';
 import {CredentialEntity, DatabaseService, UserEntity} from 'libs/database';
 import {StreamService, UserCredentialUpdatedEvent} from 'libs/stream';
@@ -22,7 +22,7 @@ export class RecoverAuthService implements TRecoverAuth {
       relations: {Otp: true, Credential: true},
     });
     if (!userWithRelations) {
-      throw new NotFoundException('Cannot find credential for change password');
+      throw new NotFoundError('Cannot find credential for change password');
     }
     const {Credential: credential, Otp: otp, ...user} = userWithRelations;
     return {user, otp, credential};
@@ -45,7 +45,7 @@ export class RecoverAuthService implements TRecoverAuth {
     await this.databaseService.transaction(async entityManager => {
       const {user, credential, otp} = await this.getUserWithRelations(entityManager, data.body.email);
       if (otp.code !== data.body.code || otp.expiresAt < new Date()) {
-        throw new NotAcceptableException('Invalid token');
+        throw new NotAcceptableError('Invalid token');
       }
       await this.changePassword(entityManager, credential, data.body.password);
       await this.publishUserCredentialUpdatedEvent(user, credential);

@@ -6,6 +6,8 @@ import {UserEntity} from './user.entity';
 
 @FullTextEntity<TProfile>({name: 'profile', fullTextFields: ['givenName', 'familyName']})
 export class ProfileEntity implements TProfile {
+  locale: string;
+  timezone: string;
   @IndexableColumn()
   id: string = uuidv7();
 
@@ -21,17 +23,8 @@ export class ProfileEntity implements TProfile {
   @Column({name: 'picture', type: 'text', nullable: true})
   picture: null | string;
 
-  @Column({name: 'cover', type: 'text', nullable: true})
-  cover: null | string;
-
-  @Column({name: 'locale', type: 'varchar', length: 10, default: 'pt-BR'})
-  locale: string;
-
   @Column({name: 'theme', type: 'enum', enum: ETheme, default: ETheme.Light})
   theme: ETheme;
-
-  @Column({name: 'timezone', type: 'varchar', length: 50, default: 'UTC'})
-  timezone: string;
 
   @Column({name: 'user_id', type: 'uuid'})
   userId: string;

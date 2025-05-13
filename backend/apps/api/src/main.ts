@@ -1,5 +1,4 @@
-import {COOKIE_SESSION_ID} from '@cdoc/domain';
-import {UnauthorizedException} from '@nestjs/common';
+import {COOKIE_SESSION_ID, UnauthorizedError} from '@cdoc/domain';
 import {NestFactory} from '@nestjs/core';
 import {ExpressAdapter, type NestExpressApplication} from '@nestjs/platform-express';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
@@ -9,6 +8,7 @@ import dotenvExpand from 'dotenv-expand';
 import express from 'express';
 import helmet from 'helmet';
 import https from 'https';
+import {DomainErrorFilter} from 'libs/common';
 import {LoggerService} from 'libs/logger';
 import packageJson from 'package.json';
 import {AppEnv} from './app.env';
@@ -29,6 +29,7 @@ export async function bootstrap(): Promise<void> {
   app.disable('x-powered-by');
   app.setGlobalPrefix(appEnv.prefix);
   app.useLogger(loggerService);
+  app.useGlobalFilters(new DomainErrorFilter());
   app.enableCors({
     credentials: true,
     origin: (origin, callback) =>
@@ -36,7 +37,7 @@ export async function bootstrap(): Promise<void> {
         ? callback(null, false)
         : appEnv.origin === '*' || appEnv.origin.replace(/\s/g, '').split(',').includes(origin)
           ? callback(null, origin)
-          : callback(new UnauthorizedException('Origin not allowed by CORS')),
+          : callback(new UnauthorizedError('Origin not allowed by CORS')),
   });
   app.use(helmet());
   app.use(cookieParser());

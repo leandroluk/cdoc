@@ -15,5 +15,6 @@ export namespace StorageProvider {
   };
   export enum Kind {
     Local = 'local',
+    AwsS3 = 'aws-s3',
   }
 }

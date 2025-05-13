@@ -1,6 +1,6 @@
 import {cn} from '#/utils';
 import {AnimatePresence, motion} from 'motion/react';
-import {PiCheckCircleDuotone, PiInfoDuotone, PiWarningDuotone, PiXCircleDuotone, PiXDuotone} from 'react-icons/pi';
+import {PiCheckCircle, PiInfo, PiWarning, PiX, PiXCircle} from 'react-icons/pi';
 import useToastStore, {type ToastType} from './useToastStore';
 
 const typeStyles: Record<ToastType, string> = {
@@ -11,10 +11,10 @@ const typeStyles: Record<ToastType, string> = {
 };
 
 const typeIcons: Record<ToastType, React.ReactNode> = {
-  info: <PiInfoDuotone className="size-5" />,
-  success: <PiCheckCircleDuotone className="size-5" />,
-  warning: <PiWarningDuotone className="size-5" />,
-  error: <PiXCircleDuotone className="size-5" />,
+  info: <PiInfo className="size-5" />,
+  success: <PiCheckCircle className="size-5" />,
+  warning: <PiWarning className="size-5" />,
+  error: <PiXCircle className="size-5" />,
 };
 
 function ToastWrapper() {
@@ -35,7 +35,7 @@ function ToastWrapper() {
             animate={{opacity: 1, y: 0}}
             exit={{opacity: 0, y: 30}}
             className={cn(
-              'alert shadow-lg max-w-sm w-[90%] sm:w-[24rem]',
+              'alert max-w-sm w-[90%] sm:w-[24rem]',
               soft && 'alert-soft',
               typeStyles[type],
               'relative pr-10'
@@ -49,10 +49,10 @@ function ToastWrapper() {
               </div>
             </div>
             <button
-              className="absolute top-2 right-2 text-base opacity-70 hover:opacity-100 cursor-pointer"
+              className="absolute top-3 right-2 text-base opacity-70 hover:opacity-100 cursor-pointer"
               onClick={() => remove(id)}
             >
-              <PiXDuotone className="w-4 h-4" />
+              <PiX className="w-4 h-4" />
             </button>
           </motion.div>
         ))}

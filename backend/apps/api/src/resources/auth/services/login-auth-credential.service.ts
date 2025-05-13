@@ -1,5 +1,5 @@
-import {TLoginAuthCredential, TOtp, TUser, type TCredential} from '@cdoc/domain';
-import {Injectable, NotAcceptableException, UnauthorizedException} from '@nestjs/common';
+import {NotAcceptableError, TLoginAuthCredential, TOtp, TUser, UnauthorizedError, type TCredential} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import {CryptoService} from 'libs/crypto';
 import {DatabaseService, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
@@ -36,7 +36,7 @@ export class LoginAuthCredentialService implements TLoginAuthCredential {
       const {user, credential, otp} = userWithRelations;
       if (!credential.isActive) {
         await this.publishUserOtpUpdatedEvent(user, otp);
-        throw new NotAcceptableException('User credential requires activation');
+        throw new NotAcceptableError('User credential requires activation');
       }
       const password = this.cryptoService.createHash(data.body.password);
       if (password === credential.password) {
@@ -44,6 +44,6 @@ export class LoginAuthCredentialService implements TLoginAuthCredential {
         return {id};
       }
     }
-    throw new UnauthorizedException();
+    throw new UnauthorizedError();
   }
 }

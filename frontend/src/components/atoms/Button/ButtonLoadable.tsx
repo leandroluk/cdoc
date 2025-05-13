@@ -1,5 +1,5 @@
 import {cn} from '#/utils';
-import {PiSpinnerGapDuotone} from 'react-icons/pi';
+import {PiSpinnerGap} from 'react-icons/pi';
 
 namespace ButtonLoadable {
   export type Props = React.ComponentProps<'button'> & {
@@ -17,7 +17,7 @@ function ButtonLoadable({className, children, loading = false, innerClassName, .
         )}
       >
         <span className="size-5 animate-spin flex justify-center items-center">
-          <PiSpinnerGapDuotone className="size-5 animate-spin-steps" />
+          <PiSpinnerGap className="size-5 animate-spin-steps" />
         </span>
       </span>
       <div className={cn('transition-opacity group-data-[loading=true]:opacity-0 flex flex-col', innerClassName)}>

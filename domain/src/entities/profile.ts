@@ -13,30 +13,21 @@ export namespace TProfile {
     familyName: null | string;
     /** @type {NULL | TEXT} */
     picture: null | string;
-    /** @type {NULL | TEXT} */
-    cover: null | string;
     /** @type {ENUM[Theme]} */
     theme: ETheme;
-    /** @type {VARCHAR[10]} */
-    locale: string;
-    /** @type {VARCHAR[50]} */
-    timezone: string;
   };
   export type Relations = {
     /** @type {User(id)} */
     userId: TUser['id'];
   };
   export const swagger = Swagger.object<TProfile>({
-    required: ['id', 'updatedAt', 'theme', 'locale', 'timezone'],
+    required: ['id', 'updatedAt', 'theme'],
     properties: {
-      cover: Swagger.url({description: "Profile's cover image url"}),
       familyName: Swagger.string({description: 'Family name of Profile'}),
       givenName: Swagger.string({description: 'Given name of Profile'}),
       id: Swagger.uuid({description: "Profile's primary key"}),
-      locale: Swagger.string({description: 'Locale of Profile'}),
       picture: Swagger.url({description: "Profile's picture image url"}),
       theme: Swagger.enum({description: 'Theme used in application', enum: Object.values(ETheme)}),
-      timezone: Swagger.string({description: 'Timezone where the Profile is related'}),
       updatedAt: Swagger.date({description: "Profile's update date"}),
       userId: Swagger.date({description: "User's foreign key related with User"}),
     },

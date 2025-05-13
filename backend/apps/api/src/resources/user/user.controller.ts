@@ -1,13 +1,13 @@
-import {TGetUserProfile, TSession, TUpdateUserProfile, TUploadUserProfileFile} from '@cdoc/domain';
+import {TGetUserWithProfile, TSession, TUpdateUserProfile, TUploadUserProfilePicture} from '@cdoc/domain';
 import {
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Put,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -19,15 +19,16 @@ import {
   ApiConsumes,
   ApiCookieAuth,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import Joi from 'joi';
 import {ValidateRequest} from 'libs/common';
 import {GetSession, SessionAuthGuard} from 'libs/session';
+import mimeTypes from 'mime-types';
 import * as services from './services';
 
 @ApiCookieAuth()
@@ -37,16 +38,34 @@ import * as services from './services';
 export class UserController {
   constructor(private readonly moduleRef: ModuleRef) {}
 
-  //#region getUserProfile
+  //#region getUserPicture
+  @Get('picture')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({summary: 'Get user picture'})
+  @ApiOkResponse({
+    description: 'Get successful',
+    content: {'image/png': {schema: {type: 'string', format: 'binary'}}},
+  })
+  @ApiNotFoundResponse({description: "User doesn' have a picture"})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  async getUserPicture(
+    @GetSession() session: TSession //
+  ): Promise<StreamableFile> {
+    const result = await this.moduleRef.get(services.GetUserPictureService).run({session});
+    return new StreamableFile(result.file, {type: mimeTypes.lookup(result.picture) as string});
+  }
+  //#endregion
+
+  //#region getUserWithProfile
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({summary: 'Get user profile'})
-  @ApiOkResponse({description: 'Get successful', schema: TGetUserProfile.Result.swagger})
+  @ApiOkResponse({description: 'Get successful', schema: TGetUserWithProfile.Result.swagger})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
-  async getUserProfile(
+  async getUserWithProfile(
     @GetSession() session: TSession //
-  ): Promise<TGetUserProfile.Result> {
-    return await this.moduleRef.get(services.GetUserProfileService).run({session});
+  ): Promise<TGetUserWithProfile.Result> {
+    return await this.moduleRef.get(services.GetUserWithProfileService).run({session});
   }
   //#endregion
 
@@ -78,31 +97,21 @@ export class UserController {
   }
   //#endregion
 
-  //#region uploadUserProfileFile
-  @Post('profile/_upload/:file')
+  //#region uploadUserProfilePicture
+  @Post('profile/_upload/picture')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({summary: 'Upload user profile file'})
+  @ApiOperation({summary: 'Upload user profile picture'})
   @ApiConsumes('multipart/form-data')
-  @ApiParam({name: 'file', schema: TUploadUserProfileFile.Data.Params.swagger.properties.file})
-  @ApiBody({schema: TUploadUserProfileFile.Data.Body.swagger})
+  @ApiBody({schema: TUploadUserProfilePicture.Data.swagger})
   @ApiOkResponse({description: 'Upload sucessful'})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
-  @ValidateRequest(
-    Joi.object({
-      file: TUploadUserProfileFile.Data.Body.schema.extract('file'),
-    })
-  )
+  @ValidateRequest(Joi.object({file: TUploadUserProfilePicture.Data.schema.extract('file')}))
   @UseInterceptors(FileInterceptor('file'))
-  async uploadUserProfileFile(
+  async uploadUserProfilePicture(
     @GetSession() session: TSession, //
-    @Param() params: TUploadUserProfileFile.Data.Params,
     @UploadedFile() file: Express.Multer.File
   ): Promise<void> {
-    await this.moduleRef.get(services.UploadUserProfileFileService).run({
-      params,
-      session,
-      body: {file},
-    });
+    await this.moduleRef.get(services.UploadUserProfilePictureService).run({session, file});
   }
   //#endregion
 }

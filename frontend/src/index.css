@@ -4,6 +4,16 @@
 @import 'tw-animate-css';
 @config "../tailwind.config.js";
 
+@layer utilities {
+  .anchor-name-\[\-\-anchor-1\] {
+    anchor-name: --anchor-1;
+  }
+
+  .anchor-position-\[\-\-anchor-1\] {
+    position-anchor: --anchor-1;
+  }
+}
+
 @plugin "daisyui" {
   themes: all;
   root: ':root';
@@ -17,4 +27,12 @@
   font-family: 'Noto Sans', system-ui, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-synthesis: none;
+}
+
+html {
+  scrollbar-gutter: auto !important;
+}
+
+:where(.modal[open], .modal-open, .modal-toggle:checked + .modal):not(.modal-start, .modal-end) {
+  scrollbar-gutter: auto !important;
 }

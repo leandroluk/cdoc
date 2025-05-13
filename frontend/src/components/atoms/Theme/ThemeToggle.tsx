@@ -1,67 +1,78 @@
-import {userStore} from '#/stores/userStore';
-import {cn, getCookie} from '#/utils';
-import {COOKIE_THEME_VALUE, ETheme} from '@cdoc/domain';
+import {cn} from '#/utils';
+import {ETheme} from '@cdoc/domain';
 import React from 'react';
-import {PiComputerTowerDuotone, PiMoonDuotone, PiSunDuotone} from 'react-icons/pi';
+import {PiComputerTower, PiMoon, PiSun} from 'react-icons/pi';
 import setDocumentTheme from './setDocumentTheme';
-
-function getSystemTheme(): ETheme {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? ETheme.Dark : ETheme.Light;
-}
 
 const themeMap = {
   [ETheme.Dark]: (
     <>
-      <PiMoonDuotone /> Escuro
+      <PiMoon /> Escuro
     </>
   ),
   [ETheme.Light]: (
     <>
-      <PiSunDuotone /> Claro
+      <PiSun /> Claro
     </>
   ),
   [ETheme.System]: (
     <>
-      <PiComputerTowerDuotone /> Sistema
+      <PiComputerTower /> Sistema
     </>
   ),
 };
 
 namespace ThemeToggle {
-  export type Props = React.ComponentProps<'div'> & {
+  export type Props = Omit<React.ComponentProps<'div'>, 'onChange'> & {
+    value?: ETheme;
+    initialValue?: ETheme;
+    onChange: (value: ETheme) => void;
     btnClassName?: string;
     btnActiveClassName?: string;
   };
 }
-function ThemeToggle({className, btnClassName, btnActiveClassName, ...props}: ThemeToggle.Props) {
-  const profileTheme = userStore(state => state.profile?.theme);
-  const [theme, setTheme] = React.useState<ETheme>(ETheme.System);
 
+function ThemeToggle({
+  className,
+  initialValue,
+  onChange,
+  btnClassName,
+  btnActiveClassName,
+  ...props
+}: ThemeToggle.Props) {
+  const [value, setValue] = React.useState(initialValue);
   React.useLayoutEffect(() => {
-    const saved = getCookie<ETheme>(COOKIE_THEME_VALUE);
-    setTheme(profileTheme ? profileTheme : saved || ETheme.System);
-  }, [profileTheme]);
+    if (value) {
+      setDocumentTheme(value === ETheme.System ? getSystemTheme() : value);
+    }
+  }, [value]);
 
-  React.useLayoutEffect(() => {
-    setDocumentTheme(theme === ETheme.System ? getSystemTheme() : theme);
-  }, [theme]);
+  const handleChange = (theme: ETheme) => () => {
+    onChange?.(theme);
+    setValue(theme);
+  };
 
   return (
     <div className={cn('join', className)} {...props}>
       {Object.entries(themeMap).map(([key, children]) => (
         <button
+          type="button"
           key={key}
           className={cn(
-            'btn join-item gap-2',
+            'btn join-item gap-3',
             btnClassName,
-            theme === (key as ETheme) && ['btn-active', btnActiveClassName]
+            value === (key as ETheme) && ['btn-active bg-base-100 border-b-2 border-b-primary', btnActiveClassName]
           )}
-          onClick={() => setTheme(key as ETheme)}
+          onClick={handleChange(key as ETheme)}
           children={children}
         />
       ))}
     </div>
   );
+}
+
+function getSystemTheme(): ETheme {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? ETheme.Dark : ETheme.Light;
 }
 
 export default ThemeToggle;

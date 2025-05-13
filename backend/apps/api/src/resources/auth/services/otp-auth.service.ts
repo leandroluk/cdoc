@@ -1,5 +1,5 @@
-import {TOtp, TOtpAuth, TUser} from '@cdoc/domain';
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {NotFoundError, TOtp, TOtpAuth, TUser} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import {CommonEnv} from 'libs/common';
 import {CryptoService} from 'libs/crypto';
 import {DatabaseService, OtpEntity, UserEntity} from 'libs/database';
@@ -19,7 +19,7 @@ export class OtpAuthService implements TOtpAuth {
   protected async getUser(entityManager: EntityManager, email: TUser['email']): Promise<TUser> {
     const user = await entityManager.getRepository(UserEntity).findOne({where: {email}});
     if (!user) {
-      throw new NotFoundException('Could not find a user for receive email');
+      throw new NotFoundError('Could not find a user for receive email');
     }
     return user;
   }

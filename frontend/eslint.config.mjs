@@ -60,10 +60,11 @@ export default tseslint.config(
   },
   /** overrides @type {import("eslint").Linter.Config} */
   {
-    files: ['**/*.tsx'],
+    files: ['**/*.tsx', '**/*.ts'],
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-misused-promises': 'off'
+      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/unbound-method': 'off'
     },
   },
   {

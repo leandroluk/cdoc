@@ -5,11 +5,15 @@ import LoaderRoot from './LoaderRoot';
 
 namespace LoaderSuspense {
   export type Props<T extends React.ComponentType<any>> = Omit<HTMLMotionProps<'div'>, 'children'> & {
-    children: React.ReactNode | React.LazyExoticComponent<T>;
+    children?: React.ReactNode | React.LazyExoticComponent<T>;
   };
 }
 
-function LoaderSuspense<T extends React.ComponentType<any>>({children, className, ...props}: LoaderSuspense.Props<T>) {
+function LoaderSuspense<T extends React.ComponentType<any>>({
+  children = <></>,
+  className,
+  ...props
+}: LoaderSuspense.Props<T>) {
   return (
     <React.Suspense fallback={<LoaderRoot className="absolute w-screen h-screen z-50 top-0 left-0" key="loader" />}>
       <motion.div

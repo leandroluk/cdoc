@@ -1,5 +1,5 @@
-import {EProvider, TSsoAuthRedirect} from '@cdoc/domain';
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {EProvider, ServerError, TSsoAuthRedirect} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import {CommonEnv} from 'libs/common';
 
 @Injectable()
@@ -21,6 +21,6 @@ export class SsoAuthRedirectService implements TSsoAuthRedirect {
       return url.toString();
     }
 
-    throw new InternalServerErrorException('Invalid provider');
+    throw new ServerError('Invalid provider');
   }
 }

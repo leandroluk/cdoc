@@ -2,7 +2,7 @@ import {EProvider, ERole, TOpenid, TProfile, TSsoAuthCallback, TUser} from '@cdo
 import {Injectable} from '@nestjs/common';
 import axios from 'axios';
 import {CommonEnv} from 'libs/common';
-import {DatabaseService, ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
+import {DatabaseService, OtpEntity, ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
 import {StorageService} from 'libs/storage';
 import {Readable} from 'node:stream';
@@ -37,70 +37,76 @@ export class SsoAuthCallbackService implements TSsoAuthCallback {
     ssoProvider: EProvider,
     openidPicture?: Readable
   ): Promise<{user: TUser; profile: TProfile}> {
-    const userWithRelations = await entityManager.getRepository(ProfileEntity).findOne({
-      where: {User: {email: openidInfo.email}},
-      relations: {User: true},
-    });
-
-    const userId = userWithRelations?.userId ?? uuidv7();
-    let pictureUrl: string | null = null;
-
-    if (openidPicture) {
-      pictureUrl = await this.storageService.saveUserPicture(userId, openidPicture);
-    }
-
     const userRepository = entityManager.getRepository(UserEntity);
     const profileRepository = entityManager.getRepository(ProfileEntity);
 
+    const userWithRelations = await userRepository.findOne({
+      where: {email: openidInfo.email},
+      relations: {Profile: true},
+    });
+
     if (userWithRelations) {
-      const {User: user, ...profile} = userWithRelations;
+      const {Profile: profile, ...user} = userWithRelations;
 
       user.removedAt = null;
 
       profile.givenName ??= openidInfo.given_name ?? null;
       profile.familyName ??= openidInfo.family_name ?? null;
-      profile.picture ??= pictureUrl;
-      profile.locale ??= openidInfo.locale ?? this.commonEnv.userDefaultLocale;
-      profile.timezone ??= openidInfo.timezone ?? this.commonEnv.userDefaultTimezone;
       profile.theme ??= this.commonEnv.userDefaultTheme;
+
+      if (openidPicture) {
+        profile.picture ??= await this.storageService.saveUserPicture(user.id, openidPicture);
+      }
 
       await Promise.all([userRepository.save(user), profileRepository.save(profile)]);
 
       return {user, profile};
-    }
-    const now = new Date();
+    } else {
+      const userId = uuidv7();
+      const now = new Date();
 
-    const {Profile: profile, ...user} = userRepository.create({
-      id: userId,
-      updatedAt: now,
-      createdAt: now,
-      removedAt: null,
-      email: openidInfo.email,
-      role: ERole.Member,
-      SsoList: [
-        entityManager.getRepository(SsoEntity).create({
+      let pictureUrl: string | null = null;
+      if (openidPicture) {
+        pictureUrl = await this.storageService.saveUserPicture(userId, openidPicture);
+      }
+
+      const user = await userRepository.save({
+        id: userId,
+        updatedAt: now,
+        createdAt: now,
+        removedAt: null,
+        email: openidInfo.email,
+        role: ERole.Member,
+      });
+
+      const [profile] = await Promise.all([
+        profileRepository.save({
+          id: uuidv7(),
+          updatedAt: now,
+          givenName: openidInfo.given_name ?? null,
+          familyName: openidInfo.family_name ?? null,
+          picture: pictureUrl,
+          theme: this.commonEnv.userDefaultTheme,
+          userId,
+        }),
+        entityManager.getRepository(OtpEntity).save({
+          id: uuidv7(),
+          updatedAt: now,
+          code: '123456',
+          expiresAt: new Date(Date.now()), // already expired
+          userId,
+        }),
+        entityManager.getRepository(SsoEntity).save({
           id: uuidv7(),
           updatedAt: now,
           provider: ssoProvider,
           key: openidInfo.sub,
+          userId,
         }),
-      ],
-      Profile: entityManager.getRepository(ProfileEntity).create({
-        id: uuidv7(),
-        updatedAt: now,
-        givenName: openidInfo.given_name ?? null,
-        familyName: openidInfo.family_name ?? null,
-        picture: pictureUrl,
-        locale: this.commonEnv.userDefaultLocale,
-        timezone: openidInfo.timezone ?? this.commonEnv.userDefaultTimezone,
-        theme: this.commonEnv.userDefaultTheme,
-      }),
-    });
+      ]);
 
-    return {
-      user: user as TUser,
-      profile,
-    };
+      return {user, profile};
+    }
   }
 
   async run(data: TSsoAuthCallback.Data): Promise<TSsoAuthCallback.Result> {
@@ -168,9 +174,6 @@ export namespace SsoAuthCallbackService {
         email: response.data.email,
         given_name: response.data.givenname,
         family_name: response.data.familyname,
-        locale: this.commonEnv.userDefaultLocale,
-        theme: this.commonEnv.userDefaultTheme,
-        timezone: this.commonEnv.userDefaultTimezone,
       };
       return openidInfo;
     }

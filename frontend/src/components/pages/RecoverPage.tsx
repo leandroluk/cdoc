@@ -1,4 +1,4 @@
-import {PiArrowCircleLeftDuotone} from 'react-icons/pi';
+import {PiArrowCircleLeft} from 'react-icons/pi';
 import {useNavigate, useSearchParams} from 'react-router';
 import OtpAuthForm from '../organisms/OtpAuthForm';
 import RecoverAuthForm from '../organisms/RecoverAuthForm';
@@ -8,26 +8,26 @@ function RecoverPage() {
   const [searchParams] = useSearchParams();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {searchParams.has('otp') ? (
         <>
           <OtpAuthForm onSend={() => navigate('?')} />
-          <a href="?" className="btn btn-outline">
+          <p onClick={() => navigate('?')} className="btn btn-outline">
             Já tem um código?
-          </a>
+          </p>
         </>
       ) : (
         <>
           <RecoverAuthForm />
-          <a href="?otp" className="btn btn-outline">
+          <p onClick={() => navigate('?otp')} className="btn btn-outline">
             Não tem um código?
-          </a>
+          </p>
         </>
       )}
-      <a href="/login" className="btn btn-link btn-sm group">
-        <PiArrowCircleLeftDuotone className="size-5 transition-transform duration-200 group-hover:-translate-x-1" />
+      <span onClick={() => navigate('/login')} className="btn btn-link btn-sm group">
+        <PiArrowCircleLeft className="size-5 transition-transform duration-200 group-hover:-translate-x-1" />
         Voltar para Login
-      </a>
+      </span>
     </div>
   );
 }

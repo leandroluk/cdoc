@@ -1,5 +1,5 @@
-import {type THealthcheck} from '@cdoc/domain';
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {ServerError, type THealthcheck} from '@cdoc/domain';
+import {Injectable} from '@nestjs/common';
 import ms from 'ms';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class Healthcheck implements THealthcheck {
     try {
       return {uptime: ms(process.uptime() * 1000)};
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new ServerError(error.message);
     }
   }
 }

@@ -46,10 +46,4 @@ export class StorageService implements StorageProvider.Type {
     await this.write(picturePath, resizedReadable, kind);
     return picturePath;
   }
-
-  async saveUserCover(userId: TUser['id'], readable: Readable, kind = this.storageEnv.provider): Promise<string> {
-    const picturePath = Handlebars.compile(this.storageEnv.userCoverUrl)({userId, ext: 'png'});
-    await this.write(picturePath, readable, kind);
-    return picturePath;
-  }
 }

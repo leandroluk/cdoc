@@ -3,4 +3,5 @@ export const ROUTES = {
   LOGIN: '/login',
   LOGOFF: '/logoff',
   RECOVER: '/recover',
+  PROFILE: '/profile',
 };

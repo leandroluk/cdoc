@@ -1,5 +1,5 @@
+import {ValidationError} from '@cdoc/domain';
 import {
-  BadRequestException,
   type CallHandler,
   type ExecutionContext,
   type NestInterceptor,
@@ -42,7 +42,7 @@ class ValidateRequestInterceptor implements NestInterceptor {
     });
 
     if (error) {
-      throw new BadRequestException(error.message);
+      throw new ValidationError(error.message);
     }
 
     Object.assign(request.params, value.params ?? request.params);

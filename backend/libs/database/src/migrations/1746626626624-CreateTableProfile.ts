@@ -10,10 +10,7 @@ export class CreateTableProfile1746626626624 implements MigrationInterface {
         "given_name"  varchar(100)       null,
         "family_name" varchar(100)       null,
         "picture"     text               null,
-        "cover"       text               null,
-        "locale"      varchar(10)    not null default 'pt-BR',
         "theme"       theme          not null default '${ETheme.Light}',
-        "timezone"    varchar(50)    not null default 'UTC',
         "user_id"     uuid           not null,
         --
         unique      ("user_id"),

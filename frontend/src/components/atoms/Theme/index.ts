@@ -1,9 +1,9 @@
-import ThemeObserver from './ThemeObserver';
+import setDocumentTheme from './setDocumentTheme';
 import ThemeToggle from './ThemeToggle';
 
 const Theme = Object.assign(ThemeToggle, {
   Toggle: ThemeToggle,
-  Observer: ThemeObserver,
+  setDocumentTheme,
 });
 
 export default Theme;

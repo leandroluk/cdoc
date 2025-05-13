@@ -41,7 +41,7 @@ function LoginAuthCredentialForm() {
         await authService.loginAuthCredential(data);
         await navigate(searchParams.get('redirect') ?? '/', {replace: true});
       } catch (error: any) {
-        Toast.error(Toast.toastProps[error.status] ?? Toast.toastProps[500]);
+        Toast.error(Toast.toastProps[error.status ?? 500]);
       } finally {
         setLoading(false);
       }
@@ -67,18 +67,18 @@ function LoginAuthCredentialForm() {
     <Form onSubmit={form.handleSubmit(handler)} className="flex flex-col">
       <Form.Control error={form.formState.errors.email}>
         <Form.Label>Email</Form.Label>
-        <Input className="bg-base-200" placeholder="john.doe@email.com" {...form.register('email')} />
+        <Input placeholder="john.doe@email.com" {...form.register('email')} />
         <Form.Description />
       </Form.Control>
 
       <Form.Control error={form.formState.errors.password}>
         <Form.Label className="flex flex-row justify-between">
           <span>Senha</span>
-          <a href="/recover?otp" className="btn btn-sm btn-link p-0 m-0 h-auto">
+          <span onClick={() => navigate('/recover?otp')} className="btn btn-sm btn-link p-0 m-0 h-auto">
             Recuperar senha
-          </a>
+          </span>
         </Form.Label>
-        <Input.Password className="bg-base-200" placeholder="********" {...form.register('password')} />
+        <Input.Password placeholder="********" {...form.register('password')} />
         <Form.Description />
       </Form.Control>
 
@@ -86,7 +86,7 @@ function LoginAuthCredentialForm() {
         <label
           className={cn(
             'flex items-center pb-2 text-xs font-medium leading-none peer-disabled:cursor-not-allowed',
-            'peer-disabled:opacity-70 gap-2'
+            'peer-disabled:opacity-70 gap-3'
           )}
         >
           Relembrar-me
