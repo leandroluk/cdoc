@@ -1,14 +1,12 @@
 import {
   COOKIE_SESSION_ID,
-  EProvider,
-  Swagger,
   TLoginAuthCredential,
+  TMicrosoftAuthCallback,
+  TMicrosoftAuthRedirect,
   TOtpAuth,
   TRecoverAuth,
-  TSsoAuthCallback,
-  TSsoAuthRedirect,
 } from '@cdoc/domain';
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Res} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {
   ApiBody,
@@ -18,7 +16,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiSeeOtherResponse,
   ApiTags,
@@ -97,19 +94,20 @@ export class AuthController {
   }
   //#endregion
 
-  //#region ssoAuthCallback
-  @Get('login/:provider/callback')
+  //#region microsoftAuthCallback
+  @Get('login/microsoft/callback')
   @HttpCode(HttpStatus.SEE_OTHER)
   @ApiOperation({summary: 'Callback of SSO Provider'})
-  @ApiParam({name: 'provider', schema: TSsoAuthCallback.Data.Params.swagger.properties.provider})
+  @ApiQuery({name: 'state', required: true, schema: {type: 'string'}})
+  @ApiQuery({name: 'code', required: false, schema: {type: 'string'}})
+  @ApiQuery({name: 'error', required: false, schema: {type: 'string'}})
   @ApiMovedPermanentlyResponse({description: 'Failed to login with SSO'})
   @ApiSeeOtherResponse({description: 'Login with SSO successful'})
-  async ssoAuthCallback(
-    @Param() params: TSsoAuthCallback.Data.Params,
-    @Query() query: TSsoAuthCallback.Data.Query,
+  async microsoftAuthCallback(
+    @Query() query: TMicrosoftAuthCallback.Data.Query,
     @Res({passthrough: true}) res: Response
   ): Promise<void> {
-    const result = await this.moduleRef.get(services.SsoAuthCallbackService).run({params, query});
+    const result = await this.moduleRef.get(services.MicrosoftAuthCallbackService).run({query});
     if (result.id) {
       res.cookie(COOKIE_SESSION_ID, result.id, {httpOnly: true, sameSite: 'none', secure: true});
       return res.redirect(HttpStatus.SEE_OTHER, result.redirect);
@@ -118,20 +116,18 @@ export class AuthController {
   }
   //#endregion
 
-  //#region ssoAuthRedirect
+  //#region microsoftAuthRedirect
   @Get('login/:provider')
   @HttpCode(HttpStatus.FOUND)
   @ApiOperation({summary: 'Redirect to SSO Provider'})
-  @ApiParam({name: 'provider', schema: Swagger.enum({enum: Object.values(EProvider)})})
   @ApiQuery({name: 'redirect', schema: {type: 'string', format: 'url'}})
   @ApiFoundResponse({description: 'Redirected successful'})
-  @ValidateRequest(TSsoAuthRedirect.Data.schema)
-  async ssoAuthRedirect(
-    @Param() params: TSsoAuthRedirect.Data.Params,
-    @Query() query: TSsoAuthRedirect.Data.Query,
+  @ValidateRequest(TMicrosoftAuthRedirect.Data.schema)
+  async microsoftAuthRedirect(
+    @Query() query: TMicrosoftAuthRedirect.Data.Query,
     @Res({passthrough: true}) res: Response
   ): Promise<void> {
-    const result = await this.moduleRef.get(services.SsoAuthRedirectService).run({params, query});
+    const result = await this.moduleRef.get(services.MicrosoftAuthRedirectService).run({query});
     res.redirect(result);
   }
   //#endregion

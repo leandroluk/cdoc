@@ -1,33 +1,15 @@
-import {EProvider} from '#/enums';
 import {type TSession} from '#/generics';
 import {Swagger} from '#/swagger';
 import Joi from 'joi';
 
-export type TSsoAuthCallback = {
-  run(data: TSsoAuthCallback.Data): Promise<TSsoAuthCallback.Result>;
+export type TMicrosoftAuthCallback = {
+  run(data: TMicrosoftAuthCallback.Data): Promise<TMicrosoftAuthCallback.Result>;
 };
-export namespace TSsoAuthCallback {
+export namespace TMicrosoftAuthCallback {
   export type Data = {
-    params: Data.Params;
     query: Data.Query;
   };
   export namespace Data {
-    export type Params = {
-      provider: EProvider;
-    };
-    export namespace Params {
-      export const schema = Joi.object<Params>({
-        provider: Joi.string()
-          .required()
-          .valid(...Object.values(EProvider)),
-      });
-      export const swagger = Swagger.object<Params>({
-        required: ['provider'],
-        properties: {
-          provider: Swagger.enum({description: 'The provider used to auth with SSO', enum: Object.values(EProvider)}),
-        },
-      });
-    }
     export type Query = {
       state: string;
       code?: string;
@@ -49,13 +31,11 @@ export namespace TSsoAuthCallback {
       });
     }
     export const schema = Joi.object<Data>({
-      params: Params.schema,
       query: Query.schema,
     });
     export const swagger = Swagger.object<Data>({
-      required: ['params', 'query'],
+      required: ['query'],
       properties: {
-        params: Params.swagger,
         query: Query.swagger,
       },
     });
