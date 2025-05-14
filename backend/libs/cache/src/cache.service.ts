@@ -5,6 +5,8 @@ import {CacheEnv} from './cache.env';
 
 @Injectable()
 export class CacheService {
+  private readonly cacheKey = 'cache';
+
   constructor(
     private readonly cacheEnv: CacheEnv,
     private readonly cacheClient: Redis,
@@ -22,7 +24,7 @@ export class CacheService {
 
   async get<T = unknown>(pattern: string): Promise<T | null> {
     try {
-      const [key] = await this.cacheClient.keys(`${this.cacheEnv.prefix}:${pattern}`);
+      const [key] = await this.cacheClient.keys(`${this.cacheKey}:${pattern}`);
       const stringfiedValue = await this.cacheClient.get(key);
       if (stringfiedValue) {
         const value = JSON.parse(stringfiedValue);
@@ -35,7 +37,7 @@ export class CacheService {
   }
 
   async set<T = unknown>(key: string, value: T, expiresInSeconds?: number): Promise<void> {
-    const ref = `${this.cacheEnv.prefix}:${key}`;
+    const ref = `${this.cacheKey}:${key}`;
     const stringfiedValue = JSON.stringify(value);
     let multi = this.cacheClient.multi().set(ref, stringfiedValue);
     if (expiresInSeconds) {
@@ -45,7 +47,7 @@ export class CacheService {
   }
 
   async del(key: string): Promise<void> {
-    await this.cacheClient.del(`${this.cacheEnv.prefix}:${key}`);
+    await this.cacheClient.del(`${this.cacheKey}:${key}`);
   }
 
   async has(key: string): Promise<boolean> {

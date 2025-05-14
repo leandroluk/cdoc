@@ -11,7 +11,7 @@ function SidebarHeader() {
   return (
     <header className="grid grid-cols-[auto_min-content] gap-3 p-3">
       <div
-        onClick={() => navigate(ROUTES.DASHBOARD)}
+        onClick={() => navigate(ROUTES.PRIVATE)}
         className="cursor-pointer grid grid-cols-[min-content_auto] gap-3 items-center "
       >
         <Svg.Favicon className="h-10" />

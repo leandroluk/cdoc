@@ -67,10 +67,4 @@ export default tseslint.config(
       '@typescript-eslint/unbound-method': 'off'
     },
   },
-  {
-    files: ['**/*.d.ts'],
-    rules: {
-      '@typescript-eslint/consistent-type-definitions': 'off'
-    }
-  }
 );

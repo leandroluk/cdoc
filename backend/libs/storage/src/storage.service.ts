@@ -6,29 +6,38 @@ import {Jimp, JimpMime} from 'jimp';
 import {Readable} from 'node:stream';
 import {StorageProvider} from './decorators';
 import {StorageEnv} from './storage.env';
+import {TStorageProvider} from './storage.types';
 
 @Injectable()
-export class StorageService implements StorageProvider.Type {
-  readonly defaultProvider: StorageProvider.Kind;
+export class StorageService implements TStorageProvider {
+  readonly provider: TStorageProvider;
 
   constructor(
     private readonly storageEnv: StorageEnv,
     private readonly moduleRef: ModuleRef
-  ) {}
-
-  async write(filePath: string, stream: Readable, kind?: StorageProvider.Kind): Promise<void> {
-    return this.moduleRef
-      .get<StorageProvider.Type>(StorageProvider.get(kind ?? this.storageEnv.provider))
-      .write(filePath, stream);
+  ) {
+    this.provider = this.moduleRef.get<TStorageProvider>(StorageProvider.get(storageEnv.provider));
   }
 
-  async read(filePath: string, kind?: StorageProvider.Kind): Promise<Readable> {
-    return this.moduleRef
-      .get<StorageProvider.Type>(StorageProvider.get(kind ?? this.storageEnv.provider))
-      .read(filePath);
+  //#region TStorageProvider implementation
+
+  async write(filePath: string, stream: Readable): Promise<void> {
+    return await this.provider.write(filePath, stream);
   }
 
-  async saveUserPicture(userId: TUser['id'], readable: Readable, kind = this.storageEnv.provider): Promise<string> {
+  async read(filePath: string): Promise<Readable> {
+    return await this.provider.read(filePath);
+  }
+
+  async ping(): Promise<void> {
+    return await this.provider.ping();
+  }
+
+  //#endregion
+
+  //#region extended methods
+
+  async saveUserPicture(userId: TUser['id'], readable: Readable): Promise<string> {
     const buffer = await new Promise<Buffer>((resolve, reject) => {
       const chunks = Array<Buffer>();
       readable.on('data', chunk => chunks.push(chunk));
@@ -43,7 +52,9 @@ export class StorageService implements StorageProvider.Type {
     const resizedReadable = Readable.from(pngBuffer);
     const picturePath = Handlebars.compile(this.storageEnv.userPictureUrl)({userId, ext: 'png'});
 
-    await this.write(picturePath, resizedReadable, kind);
+    await this.write(picturePath, resizedReadable);
     return picturePath;
   }
+
+  //#endregion
 }

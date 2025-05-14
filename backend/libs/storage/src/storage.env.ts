@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import Joi from 'joi';
 import {EnvProperty} from 'libs/common';
-import {StorageProvider} from './decorators';
+import {EStorageProvider} from './storage.types';
 
 @Injectable()
 export class StorageEnv {
@@ -14,10 +14,10 @@ export class StorageEnv {
   @EnvProperty({
     name: 'LIBS_STORAGE_PROVIDER',
     schema: Joi.string()
-      .valid(...Object.values(StorageProvider.Kind))
-      .default(StorageProvider.Kind.Local),
+      .valid(...Object.values(EStorageProvider))
+      .default(EStorageProvider.Local),
   })
-  provider: StorageProvider.Kind;
+  provider: EStorageProvider;
 
   @EnvProperty({
     name: 'LIBS_STORAGE_USER_PICTURE_SIZE',

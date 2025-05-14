@@ -25,6 +25,15 @@
         "tsConfigPath": "apps/api/tsconfig.app.json"
       }
     },
+    "apps-email-importer": {
+      "type": "application",
+      "root": "apps/email-importer",
+      "entryFile": "main",
+      "sourceRoot": "apps/email-importer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/email-importer/tsconfig.app.json"
+      }
+    },
     "apps-greendocs-extractor": {
       "type": "application",
       "root": "apps/greendocs-extractor",

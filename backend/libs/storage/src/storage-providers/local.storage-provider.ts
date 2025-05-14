@@ -4,10 +4,11 @@ import * as path from 'node:path';
 import {type Readable} from 'node:stream';
 import {StorageProvider} from '../decorators';
 import {StorageEnv} from '../storage.env';
+import {EStorageProvider, TStorageProvider} from '../storage.types';
 
 @Injectable()
-@StorageProvider(StorageProvider.Kind.Local)
-export class LocalStorageProvider implements StorageProvider.Type {
+@StorageProvider(EStorageProvider.Local)
+export class LocalStorageProvider implements TStorageProvider {
   constructor(private readonly storageEnv: StorageEnv) {}
 
   private createFullFilePath(filePath: string): string {
@@ -31,5 +32,9 @@ export class LocalStorageProvider implements StorageProvider.Type {
     await fs.promises.access(fullFilePath);
     const stream = fs.createReadStream(fullFilePath);
     return stream;
+  }
+
+  async ping(): Promise<void> {
+    // // no need logic here
   }
 }

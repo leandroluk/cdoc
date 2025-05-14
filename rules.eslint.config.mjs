@@ -6,7 +6,7 @@ export default {
   '@typescript-eslint/no-floating-promises': 'error',
   '@typescript-eslint/explicit-module-boundary-types': 'off',
   '@typescript-eslint/explicit-function-return-type': 'error',
-  '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+  '@typescript-eslint/consistent-type-definitions': 'off',
   '@typescript-eslint/no-redundant-type-constituents': 'off',
   '@typescript-eslint/no-unsafe-member-access': 'off',
   '@typescript-eslint/no-unsafe-function-type': 'off',

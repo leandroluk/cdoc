@@ -13,10 +13,10 @@ import userStore from './stores/userStore';
 
 const router = createBrowserRouter([
   {
-    path: ROUTES.DASHBOARD,
+    path: ROUTES.PRIVATE,
     element: <PrivateTemplate />,
     loader: async () => await userStore.getState().getUserWithProfile(),
-    hydrateFallbackElement: <>ovo</>,
+    hydrateFallbackElement: <Loader.Suspense />,
     errorElement: <Router.ErrorWrapper component={PrivateTemplate.ErrorBoundary} />,
     children: [
       {

@@ -5,12 +5,6 @@ import {EnvProperty} from 'libs/common';
 @Injectable()
 export class StreamEnv {
   @EnvProperty({
-    name: 'LIBS_STREAM_PREFIX',
-    schema: Joi.string().default('stream'),
-  })
-  prefix: string;
-
-  @EnvProperty({
     name: 'LIBS_STREAM_CONNECTION_STRING',
     schema: Joi.string().default('redis://localhost:6379/1'),
   })

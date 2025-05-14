@@ -14,7 +14,7 @@ function ProfilePage() {
       <PageTemplate.Header>
         <Breadcrumbs>
           <Breadcrumbs.List>
-            <Breadcrumbs.Link path={ROUTES.DASHBOARD} className="btn-square" />
+            <Breadcrumbs.Link path={ROUTES.PRIVATE} className="btn-square" />
             <Breadcrumbs.Text>Perfil</Breadcrumbs.Text>
           </Breadcrumbs.List>
         </Breadcrumbs>
