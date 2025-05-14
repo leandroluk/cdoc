@@ -43,7 +43,7 @@ export async function bootstrap(): Promise<void> {
   app.use(cookieParser());
 
   const config = new DocumentBuilder()
-    .setTitle(packageJson.displayName)
+    .setTitle(packageJson.displayName + ' - API')
     .setDescription(packageJson.description)
     .setVersion(packageJson.version)
     .addCookieAuth(COOKIE_SESSION_ID)

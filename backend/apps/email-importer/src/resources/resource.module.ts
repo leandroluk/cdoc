@@ -1,7 +1,8 @@
 import {Module} from '@nestjs/common';
+import {ImporterModule} from './importer';
 import {SystemModule} from './system';
 
 @Module({
-  imports: [SystemModule],
+  imports: [ImporterModule, SystemModule],
 })
 export class ResourcesModule {}

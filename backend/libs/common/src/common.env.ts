@@ -25,24 +25,12 @@ export class CommonEnv {
   origin: string;
 
   @EnvProperty({
-    name: 'LIBS_COMMON_USER_DEFAULT_LOCALE',
-    schema: Joi.string().default('pt-BR'),
-  })
-  userDefaultLocale: string;
-
-  @EnvProperty({
     name: 'LIBS_COMMON_USER_DEFAULT_THEME',
     schema: Joi.string()
       .valid(...Object.values(ETheme))
       .default(ETheme.Light),
   })
   userDefaultTheme: ETheme;
-
-  @EnvProperty({
-    name: 'LIBS_COMMON_USER_DEFAULT_TIMEZONE',
-    schema: Joi.string().default('UTC'),
-  })
-  userDefaultTimezone: string;
 
   @EnvProperty({
     name: 'LIBS_COMMON_API_BASE_URL',

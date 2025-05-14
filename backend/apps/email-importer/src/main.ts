@@ -19,7 +19,7 @@ export async function bootstrap(): Promise<void> {
   app.setGlobalPrefix(appEnv.prefix);
 
   const config = new DocumentBuilder()
-    .setTitle(packageJson.displayName)
+    .setTitle(packageJson.displayName + ' - Email Importer')
     .setDescription(packageJson.description)
     .setVersion(packageJson.version)
     .setContact(packageJson.author.name, packageJson.author.url, packageJson.author.email)

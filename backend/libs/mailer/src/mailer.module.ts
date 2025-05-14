@@ -1,11 +1,11 @@
 import {MailerModule as NestJSMailerModule} from '@nestjs-modules/mailer';
 import {HandlebarsAdapter} from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import {Module, type Provider} from '@nestjs/common';
-import * as services from './mailer-providers';
+import * as mailerProviders from './mailer-providers';
 import {MailerEnv} from './mailer.env';
-import {MailerService} from './mailer.service';
+import {MailerProviderBus} from './mailer.provider-bus';
 
-const providers = Array<Provider>().concat(MailerEnv, MailerService, Object.values(services));
+const providers = Array<Provider>().concat(MailerEnv, MailerProviderBus, Object.values(mailerProviders));
 
 @Module({
   imports: [

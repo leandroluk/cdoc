@@ -3,7 +3,7 @@
   "configurations": [
     // backend api
     {
-      "name": "b:api",
+      "name": "b_api",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/backend",
@@ -13,9 +13,21 @@
         "<node_internals>/**"
       ]
     },
+    // backend email-importer
+    {
+      "name": "b_email-importer",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/backend",
+      "command": "yarn dev apps-email-importer",
+      "outputCapture": "std",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
     // backend greendocs-extractor
     {
-      "name": "b:greendocs-extractor",
+      "name": "b_greendocs-extractor",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/backend",

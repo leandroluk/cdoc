@@ -4,7 +4,7 @@ import axios from 'axios';
 import {CommonEnv} from 'libs/common';
 import {DatabaseService, OtpEntity, ProfileEntity, SsoEntity, UserEntity} from 'libs/database';
 import {SessionService} from 'libs/session';
-import {StorageService} from 'libs/storage';
+import {StorageProviderBus} from 'libs/storage';
 import {Readable} from 'node:stream';
 import {EntityManager} from 'typeorm';
 import {uuidv7} from 'uuidv7';
@@ -18,7 +18,7 @@ export class MicrosoftAuthCallbackService implements TMicrosoftAuthCallback {
     private readonly commonEnv: CommonEnv,
     private readonly sessionService: SessionService,
     private readonly databaseService: DatabaseService,
-    private readonly storageService: StorageService
+    private readonly storageProviderBus: StorageProviderBus
   ) {}
 
   protected async getToken(code: string): Promise<TOpenid.Token> {
@@ -96,7 +96,7 @@ export class MicrosoftAuthCallbackService implements TMicrosoftAuthCallback {
       profile.theme ??= this.commonEnv.userDefaultTheme;
 
       if (openidPicture) {
-        profile.picture ??= await this.storageService.saveUserPicture(user.id, openidPicture);
+        profile.picture ??= await this.storageProviderBus.saveUserPicture(user.id, openidPicture);
       }
 
       await Promise.all([userRepository.save(user), profileRepository.save(profile)]);
@@ -108,7 +108,7 @@ export class MicrosoftAuthCallbackService implements TMicrosoftAuthCallback {
 
       let pictureUrl: string | null = null;
       if (openidPicture) {
-        pictureUrl = await this.storageService.saveUserPicture(userId, openidPicture);
+        pictureUrl = await this.storageProviderBus.saveUserPicture(userId, openidPicture);
       }
 
       const user = await userRepository.save({

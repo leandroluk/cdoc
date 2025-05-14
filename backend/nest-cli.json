@@ -88,6 +88,24 @@
         "tsConfigPath": "libs/logger/tsconfig.lib.json"
       }
     },
+    "libs-mailer": {
+      "type": "library",
+      "root": "libs/mailer",
+      "entryFile": "index",
+      "sourceRoot": "libs/mailer/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mailer/tsconfig.lib.json"
+      }
+    },
+    "libs-queue": {
+      "type": "library",
+      "root": "libs/queue",
+      "entryFile": "index",
+      "sourceRoot": "libs/queue/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/queue/tsconfig.lib.json"
+      }
+    },
     "libs-session": {
       "type": "library",
       "root": "libs/session",
@@ -97,6 +115,15 @@
         "tsConfigPath": "libs/session/tsconfig.lib.json"
       }
     },
+    "libs-storage": {
+      "type": "library",
+      "root": "libs/storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/storage/tsconfig.lib.json"
+      }
+    },
     "libs-stream": {
       "type": "library",
       "root": "libs/stream",
@@ -104,24 +131,6 @@
       "sourceRoot": "libs/stream/src",
       "compilerOptions": {
         "tsConfigPath": "libs/stream/tsconfig.lib.json"
-      }
-    },
-    "mailer": {
-      "type": "library",
-      "root": "libs/mailer",
-      "entryFile": "index",
-      "sourceRoot": "libs/mailer/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/mailer/tsconfig.lib.json"
-      }
-    },
-    "storage": {
-      "type": "library",
-      "root": "libs/storage",
-      "entryFile": "index",
-      "sourceRoot": "libs/storage/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/storage/tsconfig.lib.json"
       }
     }
   }

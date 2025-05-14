@@ -6,18 +6,42 @@ import {EStorageProvider} from './storage.types';
 @Injectable()
 export class StorageEnv {
   @EnvProperty({
-    name: 'LIBS_STORAGE_LOCAL_PATH',
-    schema: Joi.string().default('./.tmp/storage'),
-  })
-  localPath: string;
-
-  @EnvProperty({
     name: 'LIBS_STORAGE_PROVIDER',
     schema: Joi.string()
       .valid(...Object.values(EStorageProvider))
       .default(EStorageProvider.Local),
   })
   provider: EStorageProvider;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_LOCAL_PATH',
+    schema: Joi.string().default('./.tmp/storage'),
+  })
+  localPath: string;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_AWS_REGION',
+    schema: Joi.string().default('{{LIBS_STORAGE_AWS_REGION}}'),
+  })
+  awsRegion: string;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_AWS_ACCESS_KEY_ID',
+    schema: Joi.string().default('{{LIBS_STORAGE_AWS_REGION}}'),
+  })
+  awsAccessKeyId: string;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_AWS_SECRET_ACCESS_KEY',
+    schema: Joi.string().default('{{LIBS_STORAGE_AWS_REGION}}'),
+  })
+  awsSecretAccessKey: string;
+
+  @EnvProperty({
+    name: 'LIBS_STORAGE_AWS_S3_BUCKET',
+    schema: Joi.string().default('{{LIBS_STORAGE_AWS_S3_BUCKET}}'),
+  })
+  awsS3Bucket: string;
 
   @EnvProperty({
     name: 'LIBS_STORAGE_USER_PICTURE_SIZE',

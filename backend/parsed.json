@@ -1,0 +1,238 @@
+{
+  "attachments": [],
+  "headers": {},
+  "headerLines": [
+    {
+      "key": "return-path",
+      "line": "Return-Path: <leandro.santiago@oppem.com.br>"
+    },
+    {
+      "key": "received",
+      "line": "Received: from ROAP284CU027.outbound.protection.outlook.com (mail-brazilsoutheastazon11020131.outbound.protection.outlook.com [52.101.199.131])\r\n by inbound-smtp.us-east-1.amazonaws.com with SMTP id g4c3mfm6ii0tfuar47fg8apuvofrbql44fi7ci01\r\n for bot.cdoc@aws.oppem.com.br;\r\n Wed, 14 May 2025 20:38:58 +0000 (UTC)"
+    },
+    {
+      "key": "x-ses-spam-verdict",
+      "line": "X-SES-Spam-Verdict: PASS"
+    },
+    {
+      "key": "x-ses-virus-verdict",
+      "line": "X-SES-Virus-Verdict: PASS"
+    },
+    {
+      "key": "received-spf",
+      "line": "Received-SPF: pass (spfCheck: domain of oppem.com.br designates 52.101.199.131 as permitted sender) client-ip=52.101.199.131; envelope-from=leandro.santiago@oppem.com.br; helo=ROAP284CU027.outbound.protection.outlook.com;"
+    },
+    {
+      "key": "authentication-results",
+      "line": "Authentication-Results: amazonses.com;\r\n spf=pass (spfCheck: domain of oppem.com.br designates 52.101.199.131 as permitted sender) client-ip=52.101.199.131; envelope-from=leandro.santiago@oppem.com.br; helo=ROAP284CU027.outbound.protection.outlook.com;\r\n dmarc=none header.from=oppem.com.br;"
+    },
+    {
+      "key": "x-ses-receipt",
+      "line": "X-SES-RECEIPT: AEFBQUFBQUFBQUFHR0hCdVFkRXhxWlpESVdGdlE3WGI0dms5cldwcDRhSVJuQUhhVHdOSERDK1pBYU9hdzF3Mm1OTEF2NE9zaG5pQngrOUhxY1Qya2Vzb0RmQW1WekdjZWFYNklxZ2xoYi9Nd0hlK3lGTlJzRVByVFlIOGhsc1htZHFwVTVQbTNWMVlIbmdsRTBjc0VNMVB5a2lYSVNHYmFpVzBOckhFVk9qTnNiQVc1Q1RnZlUrUWNvSk94MXQzd3BVK012V0lSZ0ZHb29ZNzFqNllUR1pGdkdMZTB3c0huU0NRNmpBQlEzUUZadmlRbVBwRkc4ek81TjdGTVNDNjlDVzMrUHArUStkMjdlWERrY0tQYkNQMGdFUXY3dEdSQVcwa0FIVCtLZ2g1SkdRNFF5eE9EYXc9PQ=="
+    },
+    {
+      "key": "x-ses-dkim-signature",
+      "line": "X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=UPQGG06pCgqkY5ml0FAVGKzBYniv/HRtLiF/WbgnR84Z/ymGokrwqC+tsdkZEN9XhdwfpC3bBcbHnQXx/fHDe13WAcNcg3A3DNv784LZm8B3BxDryvqeNyj1xZ6z4btsHcQByQ/7yUEX6cErtrq867yQo/yKaQjvQGRijkmiU08=; c=relaxed/simple; s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1747255138; v=1; bh=xhHKm1ys1Shw8Vhl2ko3oOTaf3S5lBCvi9GQG/3BcHY=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;"
+    },
+    {
+      "key": "arc-seal",
+      "line": "ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;\r\n b=AhGDkHOYBHauVpzwnCWaldYjd5T1C4GKgbqzRLcj/JQJDvGzaFLNEc0rWgMw0kZVhprDKWuhBH9I38ENJFm8eP1gicmKg59KMlBoClvzCeBFvotuqxNiPO25QIzERnuTdZRVy0LB+WNlpzpbnPVyitWrXE8FWK3WTEH4dHBARyba7tnDp2EIv4xMLlbur9Y+4OUZvLFgo9EDuKW7Osg6fiHVpfqw+W3zFZPHpoTw9BUCDNE+PQvNQAPSQDBt25yxAPoA1Ar6gnUEjSMUQLM1r+s37xeMb+Tq6qJAoq1esOoWu3/PUz696edcIJFTXMZu6W6cLumPw3svtKYezGNUsw=="
+    },
+    {
+      "key": "arc-message-signature",
+      "line": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;\r\n s=arcselector10001;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;\r\n bh=xhHKm1ys1Shw8Vhl2ko3oOTaf3S5lBCvi9GQG/3BcHY=;\r\n b=OGaddVuIDLvvavueg9e9d5YylL7RFFgpGBCF5MDI85iVTvxTZ+gSv4XDJABxxMpZRHyjKQCNd1R796H4TTTzYR1c/XaSOhR8BASbZLOzzYY2bC7q8F1fM9tw+auQbBXz1yYc7DgGEeLA00EVILj9e91PjyjvK//weho42Ts/TAxltxafXVdWvq4ZvHYM1hkZ1+EBElcwC/Ed4Ppk7muemlA3CkUHPCnEeW1rC0P5bJQ5Fw7hQRz9Owo/HWh6KLoOWI0ggC6Ilr276g6jHX6mksuXT+7MEjkBpMpel/1PxVYzGayOLeIatdyXpiR1LPly/G/m8sTvGfT1mkXwCP9IVw=="
+    },
+    {
+      "key": "arc-authentication-results",
+      "line": "ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass\r\n smtp.mailfrom=oppem.com.br; dmarc=pass action=none header.from=oppem.com.br;\r\n dkim=pass header.d=oppem.com.br; arc=none"
+    },
+    {
+      "key": "received",
+      "line": "Received: from ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM (2603:10d6:10:4a::8) by\r\n CP4P284MB2160.BRAP284.PROD.OUTLOOK.COM (2603:10d6:103:1c8::15) with Microsoft\r\n SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id\r\n 15.20.8722.32; Wed, 14 May 2025 20:38:53 +0000"
+    },
+    {
+      "key": "received",
+      "line": "Received: from ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM\r\n ([fe80::1d3b:446:adfd:dc72]) by ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM\r\n ([fe80::1d3b:446:adfd:dc72%4]) with mapi id 15.20.8722.031; Wed, 14 May 2025\r\n 20:38:53 +0000"
+    },
+    {
+      "key": "from",
+      "line": "From: Leandro Santiago <leandro.santiago@oppem.com.br>"
+    },
+    {
+      "key": "to",
+      "line": "To: \"bot.cdoc@aws.oppem.com.br\" <bot.cdoc@aws.oppem.com.br>"
+    },
+    {
+      "key": "cc",
+      "line": "CC: Marina Vasconcelos <marina.vasconcelos@oppem.com.br>"
+    },
+    {
+      "key": "subject",
+      "line": "Subject:\r\n =?iso-8859-1?Q?Teste_de_envio_com_c=F3pia_oculta_para_ver_se_aparece_no_c?=\r\n =?iso-8859-1?Q?orpo_do_email?="
+    },
+    {
+      "key": "thread-topic",
+      "line": "Thread-Topic:\r\n =?iso-8859-1?Q?Teste_de_envio_com_c=F3pia_oculta_para_ver_se_aparece_no_c?=\r\n =?iso-8859-1?Q?orpo_do_email?="
+    },
+    {
+      "key": "thread-index",
+      "line": "Thread-Index: AQHbxRAcztijlQKJWEOWP3qt6mWE5A=="
+    },
+    {
+      "key": "date",
+      "line": "Date: Wed, 14 May 2025 20:38:53 +0000"
+    },
+    {
+      "key": "message-id",
+      "line": "Message-ID:\r\n <ROAP284MB115122354D386EF0A809EBC2B591A@ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM>"
+    },
+    {
+      "key": "accept-language",
+      "line": "Accept-Language: en-US, pt-BR"
+    },
+    {
+      "key": "content-language",
+      "line": "Content-Language: en-US"
+    },
+    {
+      "key": "x-ms-has-attach",
+      "line": "X-MS-Has-Attach:"
+    },
+    {
+      "key": "x-ms-tnef-correlator",
+      "line": "X-MS-TNEF-Correlator:"
+    },
+    {
+      "key": "msip_labels",
+      "line": "msip_labels:"
+    },
+    {
+      "key": "authentication-results",
+      "line": "authentication-results: dkim=none (message not signed)\r\n header.d=none;dmarc=none action=none header.from=oppem.com.br;"
+    },
+    {
+      "key": "x-ms-publictraffictype",
+      "line": "x-ms-publictraffictype: Email"
+    },
+    {
+      "key": "x-ms-traffictypediagnostic",
+      "line": "x-ms-traffictypediagnostic: ROAP284MB1151:EE_|CP4P284MB2160:EE_"
+    },
+    {
+      "key": "x-ms-office365-filtering-correlation-id",
+      "line": "x-ms-office365-filtering-correlation-id: a159a65b-acc3-4dcc-4605-08dd93275735"
+    },
+    {
+      "key": "x-ms-exchange-senderadcheck",
+      "line": "x-ms-exchange-senderadcheck: 1"
+    },
+    {
+      "key": "x-ms-exchange-antispam-relay",
+      "line": "x-ms-exchange-antispam-relay: 0"
+    },
+    {
+      "key": "x-microsoft-antispam",
+      "line": "x-microsoft-antispam:\r\n BCL:0;ARA:13230040|376014|10070799003|366016|1800799024|8096899003|38070700018;"
+    },
+    {
+      "key": "x-microsoft-antispam-message-info",
+      "line": "x-microsoft-antispam-message-info:\r\n =?iso-8859-1?Q?KfSXw03yRZTbMX07fdQyLAdl5ympchTuo2fGf3B5gQ4bvX+QqWSWcvavpl?=\r\n =?iso-8859-1?Q?R3vNqCFsloxzyLdlfXVJSf91S+qYaP26VELHc8Q1LFxfmHZ3/jRVl8hhU1?=\r\n =?iso-8859-1?Q?ywqHCZnuItQU9vBUyyn+6t5cdwPSzXnewKOgTY+0HZJvYuHsuzPbAbXKX5?=\r\n =?iso-8859-1?Q?QbboMYxOuFqG9sKpxfhfh6pqffZwr8l4hVWXtbbDe7vLGt3eJuSmgquKLA?=\r\n =?iso-8859-1?Q?zjBN/rFNrjlZMQWES7FFweXDaJuScz68AGMJiDZ6hS4umykBy8EXczNMIc?=\r\n =?iso-8859-1?Q?xf/KzB265lpGZ8lbFlSS3H/vy19ZzRitg+mk3xKEdumpQs9QQ2GXaplTIR?=\r\n =?iso-8859-1?Q?uRPSjSIRnCiYG/Y3xeIV50y7vR/bptRq2A2qEv5oU0Iw8dEs+TRRW2F39e?=\r\n =?iso-8859-1?Q?qw1rew21OV5fBk4e2ddyXnTvgr/SNnkG7iLY68T/wWWAga8A3h4bF6WgIy?=\r\n =?iso-8859-1?Q?y5bCsawXf5ENT9s+NksfYDvJidth/HjDsQhTNUC09XEEpG2kKrM9q5SxPd?=\r\n =?iso-8859-1?Q?vxZzyNXOmabNkgscYjYdvL7UguHDHpYH+MTUlw4Z48+BDNaLzoTLJrHrNj?=\r\n =?iso-8859-1?Q?karklgRH7VtgUe4DlsvPz3pKJHqbShejjGYA/x7KaN+fHIZRp1GSgIj7f7?=\r\n =?iso-8859-1?Q?WS2ouQ1GmtwNoubTyln8I6OdyIxcvVr2dFSZrosJ8B2Cc0CBvx5NabWX/2?=\r\n =?iso-8859-1?Q?FQyurPMtihw1BgedjlXIUQ1kcRT5reYojwySie8LlV/IP+DYE8y42pAxoD?=\r\n =?iso-8859-1?Q?YacjXPwwHu4SPv3eLzwg2mbUu7rwg7Yjd41IKrvJ3QBSP9MmUeVV8Z4HRY?=\r\n =?iso-8859-1?Q?lqtT9fCpH1qOQRabyQRC1/lCOn4mGyWbgJcu0VXff0IoXmnsP8gbis0U7Y?=\r\n =?iso-8859-1?Q?mewXgijCHzzrWAGb4yRqQGVmddXGz71Pisv/+uO+8Sx+eAbnQ+m5uxjwVx?=\r\n =?iso-8859-1?Q?j2syIKKG+UrNgjweswC99Tlk44CNhrIWDTY1JRc0vUQ2LMKf5PqhBlaM9u?=\r\n =?iso-8859-1?Q?un+ZhBBUYWfQfTA2Mk46KphN4e1Ic2eEx994AlcUGfO3e9pDs9QH5Bqz6+?=\r\n =?iso-8859-1?Q?JO94bjvZbZyaarm58mentuu8WfrsagKvJbizzsL/tKqpo5/F4QlLRnZ5vB?=\r\n =?iso-8859-1?Q?QppVwlw8piAEkHPHkfDHKvNzTz4YHuq7Z/nPDZFkptXhF9KaE+kpJDV+HW?=\r\n =?iso-8859-1?Q?mLdQ42qNWBePtTsYlaoZFrF6VifpONXpCgGljx/RRYp/f+09h0ofG4rXLH?=\r\n =?iso-8859-1?Q?Nj4CEUajQy4vlmZte6Mg=3D=3D?="
+    },
+    {
+      "key": "x-forefront-antispam-report",
+      "line": "x-forefront-antispam-report:\r\n CIP:255.255.255.255;CTRY:;LANG:pt;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(366016)(1800799024)(8096899003)(38070700018);DIR:OUT;SFP:1102;"
+    },
+    {
+      "key": "x-ms-exchange-antispam-messagedata-chunkcount",
+      "line": "x-ms-exchange-antispam-messagedata-chunkcount: 1"
+    },
+    {
+      "key": "x-ms-exchange-antispam-messagedata-0",
+      "line": "x-ms-exchange-antispam-messagedata-0:\r\n =?iso-8859-1?Q?+tGRDnFnArhtcy/vKhFkyNS1gA5tBqbDA+Tnluwnzzt6wo+v+IdTNv140e?=\r\n =?iso-8859-1?Q?WSIC+Qk3VAs7YuksTMsjuaVv193Bm52zRR6Ba+ZEEJ2317Tg6NhbkQ+Iw/?=\r\n =?iso-8859-1?Q?LdXR3OH2GQFXkoDVakuw5AeQg2B+LFviPwV/J0rnA1F6UqGUmixvWtpKcC?=\r\n =?iso-8859-1?Q?2WEPLT3uT9+kHnSY5r0TcPT/b/oe2eYtZ6dBAX1qUeVikAOmqIePYUL0MJ?=\r\n =?iso-8859-1?Q?/cEXGy17gDP4bKfGdanRJ3m8hAhXentTZkGm8LLmoKX8JTj8jQtunahgc1?=\r\n =?iso-8859-1?Q?DyHO16WZtJLOvi0duwu4Y197Tjtw5/2wfqdyJKVt0JrDL2Se6jgaMnDql7?=\r\n =?iso-8859-1?Q?rxkwiRcVWsPXmu2+91oZAOvMQj3oK/BgiGm2yWMAOEew+p2RmseuoQjDep?=\r\n =?iso-8859-1?Q?bM6LpCcXtn1lb/lYgHNaMBj7pGLYc078ehlRvJmF6QznEVeOhGD1z2I+6L?=\r\n =?iso-8859-1?Q?NMfnSNx3EL+ZYLGj+RI+g/uwzJMJ7BNI9hJbsR1reU0+MDXKDP+fjuu5fQ?=\r\n =?iso-8859-1?Q?XXkGsBR/+1zboYlL5VVXjKsSclHOBHTWc6PJzoOj8Ak/rSKxhqtu5dTkrc?=\r\n =?iso-8859-1?Q?5ad9yiQ3sRskNgpavBPyX4KYNYG3cmysjCibLx8jRudeLf4w9xs30mr8aL?=\r\n =?iso-8859-1?Q?cdddrffAuLb5e0JlwK1bripgV8cBEyXOfhMnSms9oz8aYWImImeS6qMMyK?=\r\n =?iso-8859-1?Q?ou4FFWBuRgOmpYtwEgwoizmef9l8JUxYU0EjbJIsZZ/kP18qEv9qToWrTW?=\r\n =?iso-8859-1?Q?0LF873OaWEmvFoQMhRz2Esx1B8ohIf7pekf/BwRUyEeu3optJ1UGo13iEj?=\r\n =?iso-8859-1?Q?2J4fWJIEKnRSdcNJUKGwW8V64sbFFHJ5aiuTU8nFiftjTMpj5+XD5f4WRE?=\r\n =?iso-8859-1?Q?Hg9ZX3HREmaa63jcw42oT1v4CMMwUuY8gKWaMtENf2IJtuy6nbeSnvT07/?=\r\n =?iso-8859-1?Q?qwSGZf6uZJLDEddTErrX05vcWt/lYnY8UEMVIen4Vyoq4nqMapEafp+Hoa?=\r\n =?iso-8859-1?Q?mdcH2vGmDEixJFhjDeFzkKPqZSV31CBDYxhbM0jyxtWEyC9Rc601PoPYkr?=\r\n =?iso-8859-1?Q?p3d0DtCZGipcUpoqOAuhZqLlzNEAlqivQ80pUYG/dLpMSw5eH16YRrxAgV?=\r\n =?iso-8859-1?Q?HmAhas9QiSdM7eXTq5Bj7A7uO6IQJ2QRlJcv9TN5Fc3B5MCH9E5Qh7joEo?=\r\n =?iso-8859-1?Q?K8OQ5s/O0H7y7FA+uDYxj6BKTUU7b47+tgAkDebzymAZxUANo+BLKOSrQh?=\r\n =?iso-8859-1?Q?loX+lIHd45lgzguUkj8E/jXrcKFovC9Xjg/EAKTdDUwQ5OeF3r5GeIPMQJ?=\r\n =?iso-8859-1?Q?RWELIkl5lzLHNVTuKe7zU9QN0wlQTKddLiJHQEVhcYTwP47eHR8kXCs+Hm?=\r\n =?iso-8859-1?Q?VBBkwuqtiHyTGTilWYkPSdKYxi2xo67mTiRqHmnWkC/wMaoNdJCP/cYVDD?=\r\n =?iso-8859-1?Q?4IqfKfhM0kTGs+svdc77qg/CzThjsE2ykqpKCoeeV7Ndd7j0POLcd/xD/g?=\r\n =?iso-8859-1?Q?7dz8fq8FDckHeonsqQfOYxRsc/YWJwNzjQx1T0MAg4t+LUJtJjJ2IJ+ULg?=\r\n =?iso-8859-1?Q?SfPqOEhe/TAhDUuFQB9s+U9+oUphhaxi+c4BrPMuOEDNIt0vnz2KW9VqAA?=\r\n =?iso-8859-1?Q?O1vALNChh7/zJ5EN9RBWzgzttYfyLQDTzZpFSqTV8FTTHuiFp3B0Qzjjtq?=\r\n =?iso-8859-1?Q?Z2G38c/O7ZVNrXMQe4I82lHkfHmVTu2J+ZLJMJDT9fTxJ9d+3Q2wxVoBya?=\r\n =?iso-8859-1?Q?BYVA=3D=3D?="
+    },
+    {
+      "key": "content-type",
+      "line": "Content-Type: multipart/alternative;\r\n\tboundary=\"_000_ROAP284MB115122354D386EF0A809EBC2B591AROAP284MB1151BRAP_\""
+    },
+    {
+      "key": "mime-version",
+      "line": "MIME-Version: 1.0"
+    },
+    {
+      "key": "x-originatororg",
+      "line": "X-OriginatorOrg: oppem.com.br"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-authas",
+      "line": "X-MS-Exchange-CrossTenant-AuthAs: Internal"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-authsource",
+      "line": "X-MS-Exchange-CrossTenant-AuthSource: ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-network-message-id",
+      "line": "X-MS-Exchange-CrossTenant-Network-Message-Id: a159a65b-acc3-4dcc-4605-08dd93275735"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-originalarrivaltime",
+      "line": "X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 20:38:53.2079\r\n (UTC)"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-fromentityheader",
+      "line": "X-MS-Exchange-CrossTenant-fromentityheader: Hosted"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-id",
+      "line": "X-MS-Exchange-CrossTenant-id: 60fdd20d-0e30-4890-9585-9d5a6bbd7919"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-mailboxtype",
+      "line": "X-MS-Exchange-CrossTenant-mailboxtype: HOSTED"
+    },
+    {
+      "key": "x-ms-exchange-crosstenant-userprincipalname",
+      "line": "X-MS-Exchange-CrossTenant-userprincipalname: JNdRwp95wXMhj+HeKSO4fDSJOMUD8a+99mt15ryHtWPD/KgyWwvCU42rUjqqE4XI+YNdXUfw9FQ1WK2aiEYF9+t0yu0ZMoWuLg78LYkdeCg="
+    },
+    {
+      "key": "x-ms-exchange-transport-crosstenantheadersstamped",
+      "line": "X-MS-Exchange-Transport-CrossTenantHeadersStamped: CP4P284MB2160"
+    }
+  ],
+  "html": "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\n</head>\n<body dir=\"ltr\">\n<div class=\"elementToProof\" style=\"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\n<br>\n</div>\n</body>\n</html>\n",
+  "text": "\n",
+  "textAsHtml": "<p></p>",
+  "subject": "Teste de envio com cópia oculta para ver se aparece no corpo do email",
+  "date": "2025-05-14T20:38:53.000Z",
+  "to": {
+    "value": [
+      {
+        "address": "bot.cdoc@aws.oppem.com.br",
+        "name": ""
+      }
+    ],
+    "html": "<span class=\"mp_address_group\"><a href=\"mailto:bot.cdoc@aws.oppem.com.br\" class=\"mp_address_email\">bot.cdoc@aws.oppem.com.br</a></span>",
+    "text": "bot.cdoc@aws.oppem.com.br"
+  },
+  "from": {
+    "value": [
+      {
+        "address": "leandro.santiago@oppem.com.br",
+        "name": "Leandro Santiago"
+      }
+    ],
+    "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Leandro Santiago</span> &lt;<a href=\"mailto:leandro.santiago@oppem.com.br\" class=\"mp_address_email\">leandro.santiago@oppem.com.br</a>&gt;</span>",
+    "text": "\"Leandro Santiago\" <leandro.santiago@oppem.com.br>"
+  },
+  "cc": {
+    "value": [
+      {
+        "address": "marina.vasconcelos@oppem.com.br",
+        "name": "Marina Vasconcelos"
+      }
+    ],
+    "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Marina Vasconcelos</span> &lt;<a href=\"mailto:marina.vasconcelos@oppem.com.br\" class=\"mp_address_email\">marina.vasconcelos@oppem.com.br</a>&gt;</span>",
+    "text": "\"Marina Vasconcelos\" <marina.vasconcelos@oppem.com.br>"
+  },
+  "messageId": "<ROAP284MB115122354D386EF0A809EBC2B591A@ROAP284MB1151.BRAP284.PROD.OUTLOOK.COM>"
+}

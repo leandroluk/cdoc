@@ -6,8 +6,6 @@ import {UserEntity} from './user.entity';
 
 @FullTextEntity<TProfile>({name: 'profile', fullTextFields: ['givenName', 'familyName']})
 export class ProfileEntity implements TProfile {
-  locale: string;
-  timezone: string;
   @IndexableColumn()
   id: string = uuidv7();
 

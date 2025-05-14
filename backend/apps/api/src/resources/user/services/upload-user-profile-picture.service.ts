@@ -1,16 +1,16 @@
 import {NotFoundError, TProfile, TUploadUserProfilePicture, TUser} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {DatabaseService, ProfileEntity, UserEntity} from 'libs/database';
-import {StorageService} from 'libs/storage';
+import {StorageProviderBus} from 'libs/storage';
 import {StreamService, UserProfileUpdatedEvent} from 'libs/stream';
+import {Readable} from 'stream';
 import {EntityManager} from 'typeorm';
-import {Readable} from 'typeorm/platform/PlatformTools';
 
 @Injectable()
 export class UploadUserProfilePictureService implements TUploadUserProfilePicture<Express.Multer.File> {
   constructor(
     private readonly databaseService: DatabaseService,
-    private readonly storageService: StorageService,
+    private readonly storageProviderBus: StorageProviderBus,
     private readonly streamService: StreamService
   ) {}
 
@@ -46,7 +46,7 @@ export class UploadUserProfilePictureService implements TUploadUserProfilePictur
       const user = await this.getUser(entityManager, data.session.userId);
       const changes: Partial<TProfile.Fields> = {};
       const readable = Readable.from(data.file.buffer);
-      changes.picture = await this.storageService.saveUserPicture(user.id, readable);
+      changes.picture = await this.storageProviderBus.saveUserPicture(user.id, readable);
       const newProfile = await this.updateProfile(entityManager, user.id, changes);
       await this.publishUserProfileUpdatedEvent(user, newProfile);
     });

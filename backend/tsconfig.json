@@ -57,6 +57,12 @@
       "libs/mailer/*": [
         "libs/mailer/src/*"
       ],
+      "libs/queue": [
+        "libs/queue/src"
+      ],
+      "libs/queue/*": [
+        "libs/queue/src/*"
+      ],
       "libs/session": [
         "libs/session/src"
       ],

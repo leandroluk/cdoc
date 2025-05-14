@@ -97,6 +97,7 @@ export class SupplierWorker extends AuthWorker {
   }
 
   @TimeTrack()
+  @Retry()
   protected async completeSupplierFromHeader(supplier: Partial<TSupplier>): Promise<void> {
     const evaluated = await this.page.evaluate(selector => {
       const responsibleRegexMatch = /^respons.+:\s/i;
@@ -120,6 +121,7 @@ export class SupplierWorker extends AuthWorker {
   }
 
   @TimeTrack()
+  @Retry()
   protected async completeSupplierFromContent(supplier: Partial<TSupplier>): Promise<void> {
     const evaluated = await this.page.evaluate(selector => {
       const div = document.querySelector<HTMLElement>(selector)!;
@@ -137,6 +139,7 @@ export class SupplierWorker extends AuthWorker {
   }
 
   @TimeTrack()
+  @Retry()
   protected async upsertSupplier(supplier: Partial<TSupplier>): Promise<void> {
     const repository = this.databaseService.getRepository(SupplierEntity);
     const entity = repository.create(supplier);
@@ -145,6 +148,8 @@ export class SupplierWorker extends AuthWorker {
     await repository.createQueryBuilder().insert().values(entity).orUpdate(replaceableList, uniqueList).execute();
   }
 
+  @TimeTrack()
+  @Retry()
   protected async updateWorkspace(workspace: TWorkspace): Promise<void> {
     await this.databaseService //
       .getRepository(WorkspaceEntity)

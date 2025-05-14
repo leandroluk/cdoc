@@ -1,4 +1,3 @@
-import {Injectable} from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {type Readable} from 'node:stream';
@@ -6,7 +5,6 @@ import {StorageProvider} from '../decorators';
 import {StorageEnv} from '../storage.env';
 import {EStorageProvider, TStorageProvider} from '../storage.types';
 
-@Injectable()
 @StorageProvider(EStorageProvider.Local)
 export class LocalStorageProvider implements TStorageProvider {
   constructor(private readonly storageEnv: StorageEnv) {}
@@ -14,6 +12,14 @@ export class LocalStorageProvider implements TStorageProvider {
   private createFullFilePath(filePath: string): string {
     const fullFilePath = path.resolve(this.storageEnv.localPath, filePath.replace(/^[\\/]/, ''));
     return fullFilePath;
+  }
+
+  async connect(): Promise<void> {
+    // // no need logic here
+  }
+
+  async ping(): Promise<void> {
+    // // no need logic here
   }
 
   async write(filePath: string, stream: Readable): Promise<void> {
@@ -32,9 +38,5 @@ export class LocalStorageProvider implements TStorageProvider {
     await fs.promises.access(fullFilePath);
     const stream = fs.createReadStream(fullFilePath);
     return stream;
-  }
-
-  async ping(): Promise<void> {
-    // // no need logic here
   }
 }

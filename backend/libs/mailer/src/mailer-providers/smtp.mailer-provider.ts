@@ -1,12 +1,19 @@
 import {MailerService as NodemailerService} from '@nestjs-modules/mailer';
-import {Injectable} from '@nestjs/common';
 import {type Readable} from 'node:stream';
 import {MailerProvider} from '../decorators';
+import {EMailerProvider, TMailerProvider} from '../mailer.types';
 
-@Injectable()
-@MailerProvider(MailerProvider.Kind.Smtp)
-export class SmtpMailerProvider implements MailerProvider.Type {
+@MailerProvider(EMailerProvider.Smtp)
+export class SmtpMailerProvider implements TMailerProvider {
   constructor(private readonly nodemailerService: NodemailerService) {}
+
+  async connect(): Promise<void> {
+    // // no need logic here
+  }
+
+  async ping(): Promise<void> {
+    // // no need logic here
+  }
 
   async sendEmail<T extends Record<string, unknown> = Record<string, unknown>>(data: {
     to?: Array<string>;

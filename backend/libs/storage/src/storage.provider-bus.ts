@@ -1,5 +1,5 @@
 import {TUser} from '@cdoc/domain';
-import {Injectable} from '@nestjs/common';
+import {Injectable, OnModuleInit} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import Handlebars from 'handlebars';
 import {Jimp, JimpMime} from 'jimp';
@@ -9,17 +9,23 @@ import {StorageEnv} from './storage.env';
 import {TStorageProvider} from './storage.types';
 
 @Injectable()
-export class StorageService implements TStorageProvider {
-  readonly provider: TStorageProvider;
-
+export class StorageProviderBus implements OnModuleInit, TStorageProvider {
   constructor(
     private readonly storageEnv: StorageEnv,
     private readonly moduleRef: ModuleRef
-  ) {
-    this.provider = this.moduleRef.get<TStorageProvider>(StorageProvider.get(storageEnv.provider));
+  ) {}
+
+  get provider(): TStorageProvider {
+    return this.moduleRef.get<TStorageProvider>(StorageProvider.get(this.storageEnv.provider));
   }
 
-  //#region TStorageProvider implementation
+  async onModuleInit(): Promise<void> {
+    await this.connect();
+  }
+
+  async connect(): Promise<void> {
+    await this.provider.connect();
+  }
 
   async write(filePath: string, stream: Readable): Promise<void> {
     return await this.provider.write(filePath, stream);
@@ -32,10 +38,6 @@ export class StorageService implements TStorageProvider {
   async ping(): Promise<void> {
     return await this.provider.ping();
   }
-
-  //#endregion
-
-  //#region extended methods
 
   async saveUserPicture(userId: TUser['id'], readable: Readable): Promise<string> {
     const buffer = await new Promise<Buffer>((resolve, reject) => {
@@ -55,6 +57,4 @@ export class StorageService implements TStorageProvider {
     await this.write(picturePath, resizedReadable);
     return picturePath;
   }
-
-  //#endregion
 }

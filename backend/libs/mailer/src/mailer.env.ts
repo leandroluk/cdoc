@@ -1,17 +1,17 @@
 import {Injectable} from '@nestjs/common';
 import Joi from 'joi';
 import {EnvProperty} from 'libs/common';
-import {MailerProvider} from './decorators';
+import {EMailerProvider} from './mailer.types';
 
 @Injectable()
 export class MailerEnv {
   @EnvProperty({
     name: 'LIBS_MAILER_PROVIDER',
     schema: Joi.string()
-      .valid(...Object.values(MailerProvider.Kind))
-      .default(MailerProvider.Kind.Smtp),
+      .valid(...Object.values(EMailerProvider))
+      .default(EMailerProvider.Smtp),
   })
-  provider: MailerProvider.Kind;
+  provider: EMailerProvider;
 
   @EnvProperty({
     name: 'LIBS_MAILER_SMTP_DEFAULT_FROM',

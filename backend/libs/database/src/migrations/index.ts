@@ -9,3 +9,4 @@ export * from './1746626953007-CreateTableCredential';
 export * from './1746630712247-CreateTableWorkspace';
 export * from './1746630922178-CreateTableSupplier';
 export * from './1746665061774-SeedUserWithReferences';
+export * from './1746665081774-CreateTableReceivedEmail';

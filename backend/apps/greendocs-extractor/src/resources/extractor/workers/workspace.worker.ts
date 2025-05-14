@@ -89,6 +89,7 @@ export class WorkspaceWorker extends AuthWorker {
   }
 
   @TimeTrack()
+  @Retry()
   protected async upsertProject(workspace: Partial<WorkspaceEntity>): Promise<void> {
     const repository = this.databaseService.getRepository(WorkspaceEntity);
     const entity = repository.create(workspace);
