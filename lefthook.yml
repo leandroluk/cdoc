@@ -69,4 +69,4 @@ commit-msg:
 pre-push:
   commands:
     lint_and_tsc:
-      run: yarn domain:build && yarn lint && yarn tsc
+      run: yarn build:domain && yarn lint && yarn tsc
