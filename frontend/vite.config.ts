@@ -22,13 +22,20 @@ export default defineConfig({
       key: process.env.VITE_HTTPS_KEY?.replace(/\\n/g, '\n'),
     },
   },
-  optimizeDeps: {include: ['@cdoc/domain']},
   build: {
-    commonjsOptions: {include: [/node_modules/, /@cdoc\/domain/]},
     rollupOptions: {
-      // is required because in Windows generated source maps has wrong reference of files
-      // (generate "c:" and not "C:")
-      onwarn: (warning, warn) => warning.message.includes('not read source map') && warn(warning),
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-dom')) {
+              return 'vendor/react-dom';
+            }
+            if (id.includes('react')) {
+              return 'vendor/react';
+            }
+          }
+        },
+      },
     },
   },
 });

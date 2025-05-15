@@ -6,7 +6,7 @@ import ms from 'ms';
 @Injectable()
 export class SessionEnv {
   @EnvProperty({
-    name: 'LIBS_SESSION_CONNECTION_STRING',
+    name: 'LIBS_SESSION_URL',
     schema: Joi.string().uri().default('redis://localhost:6379/0'),
   })
   connectionString: string;

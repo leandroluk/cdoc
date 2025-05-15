@@ -17,6 +17,8 @@ module.exports = config => {
       // ! solving error over "css-inline" dependency on windows
       {
         '@css-inline/css-inline-win32-x64-msvc': 'commonjs @css-inline/css-inline-win32-x64-msvc',
+        '@css-inline/css-inline-linux-x64-gnu': 'commonjs @css-inline/css-inline-linux-x64-gnu',
+        '@css-inline/css-inline-linux-x64-musl': 'commonjs @css-inline/css-inline-linux-x64-musl',
       },
     ],
     plugins: [

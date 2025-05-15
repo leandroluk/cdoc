@@ -5,7 +5,7 @@ import {EnvProperty} from 'libs/common';
 @Injectable()
 export class DatabaseEnv {
   @EnvProperty({
-    name: 'LIBS_DATABASE_CONNECTION_STRING',
+    name: 'LIBS_DATABASE_URL',
     schema: Joi.string().uri().required(),
   })
   connectionString: string;

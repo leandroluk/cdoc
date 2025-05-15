@@ -5,7 +5,7 @@ import {EnvProperty} from 'libs/common';
 @Injectable()
 export class CacheEnv {
   @EnvProperty({
-    name: 'LIBS_CACHE_CONNECTION_STRING',
+    name: 'LIBS_CACHE_URL',
     schema: Joi.string().uri().default('redis://localhost:6379/0'),
   })
   connectionString: string;

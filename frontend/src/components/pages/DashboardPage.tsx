@@ -11,7 +11,7 @@ function DashboardPage() {
       <PageTemplate.Main>
         {DashboardPage.name}
         <pre>{JSON.stringify(profile, null, 2)}</pre>
-        <Theme.Toggle btnClassName="flex-1" />
+        <Theme.Toggle btnClassName="flex-1" onChange={value => console.log(value)} />
         <button className="btn btn-primary" onClick={toggleSidebar}>
           open
         </button>

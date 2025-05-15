@@ -14,7 +14,7 @@ export class QueueEnv {
   provider: EQueueProvider;
 
   @EnvProperty({
-    name: 'LIBS_QUEUE_REDIS_CONNECTION_STRING',
+    name: 'LIBS_QUEUE_REDIS_URL',
     schema: Joi.string().default('redis://localhost:6379/0'),
   })
   redisConnectionString: string;
