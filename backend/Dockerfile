@@ -16,7 +16,7 @@ COPY domain                 ./domain
 #* Install all (including domain as `file:../domain` dependency)
 RUN yarn install --frozen-lockfile
 
-#* Build domain project first
+#* Build domain first
 WORKDIR /cdoc/domain
 RUN yarn build
 
