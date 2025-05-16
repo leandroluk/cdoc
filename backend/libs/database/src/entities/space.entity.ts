@@ -1,11 +1,11 @@
-import {TWorkspace} from '@cdoc/domain';
+import {TSpace} from '@cdoc/domain';
 import {Column, Entity, OneToMany} from 'typeorm';
 import {uuidv7} from 'uuidv7';
 import {CreatableColumn, IndexableColumn, RemovableColumn, UpdatableColumn} from '../decorators';
 import {SupplierEntity} from './supplier.entity';
 
-@Entity({name: 'workspace'})
-export class WorkspaceEntity implements TWorkspace {
+@Entity({name: 'space'})
+export class SpaceEntity implements TSpace {
   @IndexableColumn()
   id: string = uuidv7();
 
@@ -41,6 +41,6 @@ export class WorkspaceEntity implements TWorkspace {
 
   //--
 
-  @OneToMany(() => SupplierEntity, _ => _.Workspace)
+  @OneToMany(() => SupplierEntity, _ => _.Space)
   SupplierList: SupplierEntity[];
 }

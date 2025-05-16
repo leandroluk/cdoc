@@ -1,8 +1,8 @@
-import {TSupplier, TWorkspace} from '@cdoc/domain';
+import {TSpace, TSupplier} from '@cdoc/domain';
 import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import {uuidv7} from 'uuidv7';
 import {CreatableColumn, IndexableColumn, RemovableColumn, UpdatableColumn} from '../decorators';
-import {WorkspaceEntity} from './workspace.entity';
+import {SpaceEntity} from './space.entity';
 
 @Entity({name: 'supplier'})
 export class SupplierEntity implements TSupplier {
@@ -60,12 +60,12 @@ export class SupplierEntity implements TSupplier {
   @Column({name: 'greendocs_situation', type: 'text'})
   greendocsSituation: string;
 
-  @Column({name: 'workspace_id', type: 'uuid'})
-  workspaceId: TWorkspace['id'];
+  @Column({name: 'space_id', type: 'uuid'})
+  spaceId: TSpace['id'];
 
   //--
 
-  @ManyToOne(() => WorkspaceEntity, _ => _.SupplierList, {cascade: true})
-  @JoinColumn({name: 'workspace_id', referencedColumnName: 'id'})
-  Workspace: WorkspaceEntity;
+  @ManyToOne(() => SpaceEntity, _ => _.SupplierList, {cascade: true})
+  @JoinColumn({name: 'space_id', referencedColumnName: 'id'})
+  Space: SpaceEntity;
 }

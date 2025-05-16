@@ -1,12 +1,10 @@
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#? PROJECT
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#? BUILD
 
-FROM node:alpine AS project
+FROM node:alpine AS build
 
 WORKDIR /cdoc
 
-#* Copy workspace references, domain and backend projects
+#* Copy space references, domain and backend projects
 COPY package.json yarn.lock ./
 COPY domain                 ./domain
 COPY frontend               ./frontend
@@ -22,14 +20,12 @@ RUN yarn build
 WORKDIR /cdoc/frontend
 RUN yarn build
 
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#? PRODUCTION
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#? DEPLOY
 
 FROM nginx:alpine AS production
 
 #* Copy files from project
-COPY --from=project /cdoc/frontend/dist /usr/share/nginx/html
+COPY --from=build /cdoc/frontend/dist /usr/share/nginx/html
 
 #* Expose the default port of Nginx
 EXPOSE 80

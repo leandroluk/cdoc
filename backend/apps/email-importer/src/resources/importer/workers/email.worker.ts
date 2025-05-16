@@ -1,9 +1,9 @@
 import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
-import {DatabaseService, ReceivedEmailEntity} from 'libs/database';
+import {DatabaseService, EmailEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {QueueProviderBus} from 'libs/queue';
 import {StorageProviderBus} from 'libs/storage';
-import {AddressObject, EmailAddress, simpleParser} from 'mailparser';
+import {AddressObject, Attachment, EmailAddress, simpleParser} from 'mailparser';
 import {uuidv7} from 'uuidv7';
 
 type Payload = {
@@ -24,14 +24,22 @@ export class EmailWorker implements OnApplicationBootstrap {
     private readonly loggerService: LoggerService
   ) {}
 
-  private joinAddresses(addressOrAddresses?: AddressObject | AddressObject[]): string {
+  private mapAddress(input?: AddressObject | AddressObject[]): string[] {
     const emailList = Array<AddressObject | undefined>()
-      .concat(addressOrAddresses)
+      .concat(input)
       .flatMap(addressObject => addressObject?.value)
       .flatMap(emailAddress => Array<EmailAddress | undefined>().concat(emailAddress, emailAddress?.group))
       .flatMap(emailAddress => emailAddress?.address)
-      .filter(Boolean);
-    return [...new Set(emailList)].join(',');
+      .filter(Boolean) as string[];
+    return Array.from(new Set(emailList));
+  }
+
+  private mapAttachment(input?: Attachment | Attachment[]): string[] {
+    const filenameList = Array<Attachment | undefined>()
+      .concat(input)
+      .map(attachment => attachment?.filename)
+      .filter(Boolean) as string[];
+    return Array.from(new Set(filenameList));
   }
 
   async onApplicationBootstrap(): Promise<void> {
@@ -39,23 +47,21 @@ export class EmailWorker implements OnApplicationBootstrap {
   }
 
   async run(): Promise<void> {
-    // > JSON.parse(JSON.parse(m.Messages[0].Body).Message).receipt.action.objectKey
     await this.queueProviderBus.subscribe('bot-cdoc', async (payload: Payload) => {
       const message: Payload.Message = JSON.parse(payload.Message);
       const readable = await this.storageProviderBus.read(message.receipt.action.objectKey);
       const parsed = await simpleParser(readable);
-      require('fs').writeFileSync(`${process.cwd()}/parsed.json`, JSON.stringify(parsed, null, 2)); // eslint-disable-line @typescript-eslint/no-require-imports
       let body = parsed.html as string;
       body ||= parsed.textAsHtml ?? parsed.text ?? '';
-      await this.databaseService.getRepository(ReceivedEmailEntity).save({
+      await this.databaseService.getRepository(EmailEntity).save({
         id: uuidv7(),
         createdAt: new Date(),
         subject: parsed.subject,
-        from: this.joinAddresses(parsed.from),
-        to: this.joinAddresses(parsed.to),
-        cc: this.joinAddresses(parsed.cc),
+        fromList: this.mapAddress(parsed.from),
+        toList: this.mapAddress(parsed.to),
+        ccList: this.mapAddress(parsed.cc),
         body,
-        attachmentList: (parsed.attachments || []).map(attachment => attachment.filename).filter(Boolean).join(','), // prettier-ignore
+        attachmentList: this.mapAttachment(parsed.attachments),
       });
     });
   }

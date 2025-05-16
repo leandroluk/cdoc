@@ -1,7 +1,7 @@
-import {TSupplier, TWorkspace} from '@cdoc/domain';
+import {TSpace, TSupplier} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {Retry, TimeTrack} from 'libs/common';
-import {DatabaseService, SupplierEntity, WorkspaceEntity} from 'libs/database';
+import {DatabaseService, SpaceEntity, SupplierEntity} from 'libs/database';
 import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
 import {AuthWorker} from './auth.worker';
@@ -24,7 +24,7 @@ export class SupplierWorker extends AuthWorker {
   @TimeTrack()
   @Retry()
   protected async navigateToSuppliersPage(
-    suppliersViewLink: Exclude<TWorkspace['suppliersViewLink'], null>
+    suppliersViewLink: Exclude<TSpace['suppliersViewLink'], null>
   ): Promise<void> {
     await Promise.all([
       this.page.goto(suppliersViewLink), //
@@ -150,30 +150,30 @@ export class SupplierWorker extends AuthWorker {
 
   @TimeTrack()
   @Retry()
-  protected async updateWorkspace(workspace: TWorkspace): Promise<void> {
+  protected async updateSpace(space: TSpace): Promise<void> {
     await this.databaseService //
-      .getRepository(WorkspaceEntity)
-      .update({id: workspace.id}, {suppliersExtractionAt: new Date()});
+      .getRepository(SpaceEntity)
+      .update({id: space.id}, {suppliersExtractionAt: new Date()});
   }
 
   @TimeTrack()
   @Retry()
-  async run(workspace: TWorkspace): Promise<void> {
-    if (!workspace.suppliersViewLink) {
+  async run(space: TSpace): Promise<void> {
+    if (!space.suppliersViewLink) {
       return;
     }
     await this.login();
-    await this.navigateToSuppliersPage(workspace.suppliersViewLink);
+    await this.navigateToSuppliersPage(space.suppliersViewLink);
     await this.changePagination();
     await this.loadAllPages();
     const partialSupplierList: Array<Partial<TSupplier>> = await this.extractPartialSupplierList();
     for (const partialSupplier of partialSupplierList) {
-      partialSupplier.workspaceId = workspace.id;
+      partialSupplier.spaceId = space.id;
       await this.navigateToSupplierPage(partialSupplier.link as string);
       await this.completeSupplierFromHeader(partialSupplier);
       await this.completeSupplierFromContent(partialSupplier);
       await this.upsertSupplier(partialSupplier);
     }
-    await this.updateWorkspace(workspace);
+    await this.updateSpace(space);
   }
 }

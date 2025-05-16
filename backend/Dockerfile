@@ -1,14 +1,12 @@
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#? WORKSPACE 
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#? BUILD
 
-FROM node:alpine AS workspace
+FROM node:alpine AS build
 ARG APP_NAME
 ENV APP_NAME=${APP_NAME}
 
 WORKDIR /cdoc
 
-#* Copy workspace references, domain and backend projects
+#* Copy space references, domain and backend projects
 COPY package.json yarn.lock ./
 COPY backend                ./backend
 COPY domain                 ./domain
@@ -24,11 +22,9 @@ RUN yarn build
 WORKDIR /cdoc/backend
 RUN yarn build:${APP_NAME}
 
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#? PROJECT
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#? DEPS
 
-FROM node:alpine AS project
+FROM node:alpine AS deps
 ARG APP_NAME
 ENV APP_NAME=${APP_NAME} NODE_ENV=production
 
@@ -38,15 +34,13 @@ WORKDIR /cdoc
 COPY ./backend/package.json ./backend/package.json
 
 #* Copy only compiled code of `domain` to resolve the backend dependency
-COPY --from=workspace /cdoc/domain/dist ./domain/dist
+COPY --from=build /cdoc/domain/dist ./domain/dist
 
 #* Install only production dependencies of `backend`
 WORKDIR /cdoc/backend
 RUN yarn install --production --frozen-lockfile
 
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#? PRODUCTION
-#?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#? DEPLOY
 
 FROM node:alpine AS production
 ARG APP_NAME
@@ -55,10 +49,10 @@ ENV APP_NAME=${APP_NAME} NODE_ENV=production
 WORKDIR /cdoc
 
 #* Copy only the compiled files of APP_NAME
-COPY --from=workspace /cdoc/backend/dist/apps/${APP_NAME} ./dist
+COPY --from=build /cdoc/backend/dist/apps/${APP_NAME} ./dist
 
 #* Copy node_modules from *deps* stage
-COPY --from=project /cdoc/backend/node_modules ./node_modules
+COPY --from=deps /cdoc/backend/node_modules ./node_modules
 
 #* Entrypoint of app
 CMD ["node", "dist/main.js"]
