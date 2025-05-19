@@ -1,14 +1,12 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {type Readable} from 'node:stream';
 import {MailerProvider} from './decorators';
 import {MailerEnv} from './mailer.env';
 import {TMailerProvider} from './mailer.types';
 
-type TMailerProviderWithoutConnect = Omit<TMailerProvider, 'connect'>;
-
 @Injectable()
-export class MailerProviderBus implements TMailerProviderWithoutConnect, OnModuleInit {
+export class MailerProviderBus implements TMailerProvider {
   constructor(
     private readonly mailerEnv: MailerEnv,
     private readonly moduleRef: ModuleRef
@@ -18,7 +16,7 @@ export class MailerProviderBus implements TMailerProviderWithoutConnect, OnModul
     return this.moduleRef.get<TMailerProvider>(MailerProvider.get(this.mailerEnv.provider));
   }
 
-  async onModuleInit(): Promise<void> {
+  async connect(): Promise<void> {
     return await this.provider.connect();
   }
 

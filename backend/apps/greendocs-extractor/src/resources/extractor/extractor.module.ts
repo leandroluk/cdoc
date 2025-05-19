@@ -4,9 +4,10 @@ import {CommonModule} from 'libs/common';
 import {DatabaseModule} from 'libs/database';
 import {LoggerModule} from 'libs/logger';
 import {ExtractorEnv} from './extractor.env';
+import {ExtractorLifecycle} from './extractor.lifecycle';
 import {ExtractorOrchestrator} from './extractor.orchestrator';
 import * as factories from './factories';
-import * as workers from './workers';
+import * as workers from './services';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import * as workers from './workers';
   providers: Array<Provider>().concat(
     ExtractorEnv,
     ExtractorOrchestrator,
+    ExtractorLifecycle,
     Object.values(factories),
     Object.values(workers)
   ),

@@ -1,6 +1,5 @@
-import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {DatabaseService, EmailEntity} from 'libs/database';
-import {LoggerService} from 'libs/logger';
 import {QueueProviderBus} from 'libs/queue';
 import {StorageProviderBus} from 'libs/storage';
 import {AddressObject, Attachment, EmailAddress, simpleParser} from 'mailparser';
@@ -16,12 +15,11 @@ namespace Payload {
 }
 
 @Injectable()
-export class EmailWorker implements OnApplicationBootstrap {
+export class EmailService {
   constructor(
     private readonly queueProviderBus: QueueProviderBus,
     private readonly storageProviderBus: StorageProviderBus,
-    private readonly databaseService: DatabaseService,
-    private readonly loggerService: LoggerService
+    private readonly databaseService: DatabaseService
   ) {}
 
   private mapAddress(input?: AddressObject | AddressObject[]): string[] {
@@ -40,10 +38,6 @@ export class EmailWorker implements OnApplicationBootstrap {
       .map(attachment => attachment?.filename)
       .filter(Boolean) as string[];
     return Array.from(new Set(filenameList));
-  }
-
-  async onApplicationBootstrap(): Promise<void> {
-    this.run().catch((error: Error) => this.loggerService.error(`Failed to initialize. ${error.message}`));
   }
 
   async run(): Promise<void> {

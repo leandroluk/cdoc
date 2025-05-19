@@ -1,4 +1,4 @@
-import {Injectable, OnApplicationBootstrap, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {DiscoveryService, MetadataScanner, Reflector} from '@nestjs/core';
 import {Redis} from 'ioredis';
 import {LoggerService} from 'libs/logger';
@@ -7,7 +7,7 @@ import {STREAM_SUBSCRIBE_EVENT_METADATA_KEY} from './stream.constants';
 import {StreamEnv} from './stream.env';
 
 @Injectable()
-export class StreamService implements OnModuleInit, OnApplicationBootstrap {
+export class StreamService {
   readonly client: Redis;
   readonly subscriber: Redis;
 
@@ -22,17 +22,13 @@ export class StreamService implements OnModuleInit, OnApplicationBootstrap {
     this.subscriber = this.client.duplicate({autoResubscribe: true, reconnectOnError: () => true});
   }
 
-  async onModuleInit(): Promise<void> {
+  async connect(): Promise<void> {
     try {
       await Promise.all([this.client.connect(), this.subscriber.connect()]);
     } catch (error) {
-      this.loggerService.error(`Failed to init ${this.constructor.name}.`, error);
+      this.loggerService.error(`Failed to connect ${this.constructor.name}.`, error);
       throw error;
     }
-  }
-
-  async onApplicationBootstrap(): Promise<void> {
-    this.explore().catch(console.error);
   }
 
   async ping(): Promise<void> {
@@ -56,7 +52,7 @@ export class StreamService implements OnModuleInit, OnApplicationBootstrap {
     }
   }
 
-  private async explore(): Promise<void> {
+  async explore(): Promise<void> {
     const instanceWrappers = this.discoveryService.getProviders();
 
     for (const {instance} of instanceWrappers) {

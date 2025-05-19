@@ -4,10 +4,10 @@ import {Retry, TimeTrack} from 'libs/common';
 import {DatabaseService, SpaceEntity, SupplierEntity} from 'libs/database';
 import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
-import {AuthWorker} from './auth.worker';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class SupplierWorker extends AuthWorker {
+export class SupplierService extends BaseService {
   readonly dataScrapperAttribute = 'data-scrapper';
   readonly paginationSelector = 'select#PaginarPor';
   readonly instanceHeaderSelector = '#acoes_Objeto';

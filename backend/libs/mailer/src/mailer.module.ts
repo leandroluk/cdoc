@@ -3,9 +3,15 @@ import {HandlebarsAdapter} from '@nestjs-modules/mailer/dist/adapters/handlebars
 import {Module, type Provider} from '@nestjs/common';
 import * as mailerProviders from './mailer-providers';
 import {MailerEnv} from './mailer.env';
+import {MailerLifecycle} from './mailer.lifecycle';
 import {MailerProviderBus} from './mailer.provider-bus';
 
-const providers = Array<Provider>().concat(MailerEnv, MailerProviderBus, Object.values(mailerProviders));
+const providers = Array<Provider>().concat(
+  MailerEnv,
+  MailerProviderBus,
+  MailerLifecycle,
+  Object.values(mailerProviders)
+);
 
 @Module({
   imports: [

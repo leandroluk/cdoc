@@ -1,5 +1,5 @@
 import {TUser} from '@cdoc/domain';
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import Handlebars from 'handlebars';
 import {Jimp, JimpMime} from 'jimp';
@@ -8,10 +8,8 @@ import {StorageProvider} from './decorators';
 import {StorageEnv} from './storage.env';
 import {TStorageProvider} from './storage.types';
 
-type TStorageProviderWithoutConnect = Omit<TStorageProvider, 'connect'>;
-
 @Injectable()
-export class StorageProviderBus implements TStorageProviderWithoutConnect, OnModuleInit {
+export class StorageProviderBus implements TStorageProvider {
   constructor(
     private readonly storageEnv: StorageEnv,
     private readonly moduleRef: ModuleRef
@@ -21,7 +19,7 @@ export class StorageProviderBus implements TStorageProviderWithoutConnect, OnMod
     return this.moduleRef.get<TStorageProvider>(StorageProvider.get(this.storageEnv.provider));
   }
 
-  async onModuleInit(): Promise<void> {
+  async connect(): Promise<void> {
     await this.provider.connect();
   }
 

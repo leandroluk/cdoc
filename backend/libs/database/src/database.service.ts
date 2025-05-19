@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {LoggerService} from 'libs/logger';
 import {DataSource, EntityManager, ObjectLiteral, Repository, type EntityTarget} from 'typeorm';
 import {DatabaseEnv} from './database.env';
@@ -6,7 +6,7 @@ import * as entities from './entities';
 import * as migrations from './migrations';
 
 @Injectable()
-export class DatabaseService implements OnModuleInit {
+export class DatabaseService {
   private readonly dataSource: DataSource;
 
   constructor(
@@ -21,8 +21,7 @@ export class DatabaseService implements OnModuleInit {
       logging: databaseEnv.logging,
     });
   }
-
-  async onModuleInit(): Promise<void> {
+  async connect(): Promise<void> {
     try {
       await this.dataSource.initialize();
       await this.dataSource.runMigrations();

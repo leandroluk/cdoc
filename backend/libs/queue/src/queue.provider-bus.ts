@@ -1,13 +1,11 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {QueueProvider} from './decorators';
 import {QueueEnv} from './queue.env';
 import {TQueueProvider} from './queue.types';
 
-type TQueueProviderWithoutConnect = Omit<TQueueProvider, 'connect'>;
-
 @Injectable()
-export class QueueProviderBus implements TQueueProviderWithoutConnect, OnModuleInit {
+export class QueueProviderBus implements TQueueProvider {
   constructor(
     private readonly queueEnv: QueueEnv,
     private readonly moduleRef: ModuleRef
@@ -17,7 +15,7 @@ export class QueueProviderBus implements TQueueProviderWithoutConnect, OnModuleI
     return this.moduleRef.get<TQueueProvider>(QueueProvider.get(this.queueEnv.provider));
   }
 
-  async onModuleInit(): Promise<void> {
+  async connect(): Promise<void> {
     await this.provider.connect();
   }
 

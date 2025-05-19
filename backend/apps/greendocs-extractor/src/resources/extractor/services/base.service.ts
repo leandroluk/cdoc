@@ -4,7 +4,7 @@ import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
 
 @Injectable()
-export class AuthWorker {
+export class BaseService {
   constructor(
     protected readonly extractorEnv: ExtractorEnv,
     protected readonly page: Page

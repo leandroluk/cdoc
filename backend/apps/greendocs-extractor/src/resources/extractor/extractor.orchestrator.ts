@@ -1,25 +1,20 @@
 import {TSpace} from '@cdoc/domain';
-import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ModuleRef} from '@nestjs/core';
 import {Cron, CronExpression} from '@nestjs/schedule';
 import {subDays, subHours} from 'date-fns';
 import {DatabaseService, SpaceEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {IsNull, LessThan, MoreThan, Not, Or} from 'typeorm';
-import * as workers from './workers';
+import * as workers from './services';
 
 @Injectable()
-export class ExtractorOrchestrator implements OnApplicationBootstrap {
+export class ExtractorOrchestrator {
   constructor(
     protected readonly moduleRef: ModuleRef,
     protected readonly loggerService: LoggerService,
     protected readonly databaseService: DatabaseService
   ) {}
-
-  // TODO: REMOVE THIS ON DEPLOY
-  async onApplicationBootstrap(): Promise<void> {
-    this.run().catch(console.error);
-  }
 
   protected async shouldExtracProject(): Promise<boolean> {
     const count = await this.databaseService.getRepository(SpaceEntity).count({
@@ -43,7 +38,7 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
   @Cron(CronExpression.EVERY_HOUR)
   async run(): Promise<void> {
     if (await this.shouldExtracProject()) {
-      await this.moduleRef.get(workers.SpaceWorker).run();
+      await this.moduleRef.get(workers.SpaceService).run();
     }
     this.loggerService.log('Starting Space extraction');
 
@@ -53,7 +48,7 @@ export class ExtractorOrchestrator implements OnApplicationBootstrap {
       if (!space) {
         break;
       }
-      await this.moduleRef.get(workers.SupplierWorker).run(space);
+      await this.moduleRef.get(workers.SupplierService).run(space);
     }
     this.loggerService.log(`Extraction finished using reference ${reference.toJSON()}`);
   }

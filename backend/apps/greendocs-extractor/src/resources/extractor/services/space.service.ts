@@ -5,10 +5,10 @@ import {DatabaseService, SpaceEntity} from 'libs/database';
 import {LoggerService} from 'libs/logger';
 import {Page} from 'puppeteer';
 import {ExtractorEnv} from '../extractor.env';
-import {AuthWorker} from './auth.worker';
+import {BaseService} from './base.service';
 
 @Injectable()
-export class SpaceWorker extends AuthWorker {
+export class SpaceService extends BaseService {
   readonly spaceListSelector = '#lista_projetos .item_menu [onclick]';
   readonly cdocSelector = '[title="CDOC"]';
 
