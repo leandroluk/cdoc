@@ -8,7 +8,7 @@ export function QueueProvider(queueProvider: EQueueProvider): ClassDecorator {
   };
 }
 export namespace QueueProvider {
-  export const key = Symbol('QueueProvider');
+  export const key = Symbol(QueueProvider.name);
   export const map = new Map<EQueueProvider, Function>();
   export const get = (kind: EQueueProvider): Function => map.get(kind)!;
 }

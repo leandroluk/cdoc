@@ -17,6 +17,7 @@ export namespace TGetUserWithProfile {
       properties: {
         id: TUser.swagger.properties.id,
         updatedAt: TUser.swagger.properties.updatedAt,
+        createdAt: TUser.swagger.properties.createdAt,
         removedAt: TUser.swagger.properties.removedAt,
         email: TUser.swagger.properties.email,
         role: TUser.swagger.properties.role,

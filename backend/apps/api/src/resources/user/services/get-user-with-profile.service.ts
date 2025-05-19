@@ -14,6 +14,7 @@ export class GetUserWithProfileService implements TGetUserWithProfile {
     return {
       id: userWithRelations.id,
       updatedAt: userWithRelations.updatedAt,
+      createdAt: userWithRelations.createdAt,
       removedAt: userWithRelations.removedAt,
       email: userWithRelations.email,
       role: userWithRelations.role,

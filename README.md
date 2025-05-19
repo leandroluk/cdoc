@@ -110,3 +110,122 @@ To run the projects, it is necessary to pass all the environment variables on wh
 - **Frontend**
 
   > [!WARNING] Not writed yet
+
+## Entity Relation Diagram
+
+```mermaid
+---
+  config:
+    class:
+      hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+
+    User     --|> Otp        : userId
+    User     --*  Sso        : userId
+    User     --|> Credential : userId
+    User     --|> Profile    : userId
+    Space    --*  Suplier    : spaceId
+    Suplier  ..>   Email     : email
+
+    class Role {
+        <<Enum>>
+        Admin
+        Guest
+        Member
+    }
+    class User {
+        id        UUIDV7          
+        updatedAt TIMESTAMPTZ[3]
+        createdAt TIMESTAMPTZ[3]
+        removedAt NULL | TIMESTAMPTZ[3]
+        email     VARCHAR[100]
+        role      ENUM[Role]
+    }
+    class Provider {
+        <<Enum>>
+        Microsoft
+    }
+    class Sso {
+        id UUIDV7
+        updatedAt TIMESTAMPTZ[3]
+        createdAt TIMESTAMPTZ[3]
+        provider  ENUM[Provider]
+        key       VARCHAR[50]
+        userId    User(id)
+    }
+    class Theme {
+        <<Enum>>
+        Light
+        Dark
+        System
+    }
+    class Profile {
+        id         UUIDV7
+        updatedAt  TIMESTAMPTZ[3]
+        givenName  NULL | VARCHAR[100]
+        familyName NULL | VARCHAR[100]
+        picture    NULL | TEXT
+        theme      ENUM[Theme]
+        userId     User(id)
+    }
+    class Otp {
+        id        UUIDV7
+        updatedAt TIMESTAMPTZ[3]
+        expiresAt TIMESTAMPTZ[3]
+        code      CHAR[6]
+        userId    User(id)
+    }
+    class Credential {
+        id        UUIDV7
+        updatedAt TIMESTAMPTZ[3]
+        password  TEXT
+        isActive  BOOLEAN
+        userId    User(id)
+    }
+    class Space {
+        id                    UUIDV7
+        updatedAt             TIMESTAMPTZ[3]
+        createdAt             TIMESTAMPTZ[3]
+        removedAt             NULL | TIMESTAMPTZ[3]
+        link                  TEXT
+        submenuSelector       NULL | TEXT
+        suppliersExtractionAt NULL | TIMESTAMPTZ[3]
+        suppliersViewLink     NULL | TEXT
+        reserveViewLink       NULL | TEXT
+        greendocsId           INTEGER
+        greendocsName         VARCHAR[100]
+    }
+    class Suplier {
+        id                     UUIDV7
+        updatedAt              TIMESTAMPTZ[3]
+        createdAt              TIMESTAMPTZ[3]
+        removedAt              TIMESTAMPTZ[3]
+        link                   TEXT
+        greendocsDocId         INTEGER
+        greendocsInstanceId    INTEGER
+        greendocsName          TEXT
+        greendocsSupplierName  TEXT
+        greendocsAddress       TEXT
+        greendocsCity          TEXT
+        greendocsState         TEXT
+        greendocsZipCode       TEXT
+        greendocsEmail         TEXT
+        greendocsPhone         TEXT
+        greendocsResponsible   TEXT
+        greendocsInAttentionBy TEXT
+        greendocsSituation     TEXT
+        spaceId                Space(id)
+    }
+    class Email {
+        id             UUIDV7
+        createdAt      TIMESTAMPTZ[3]
+        subject        TEXT
+        body           TEXT
+        fromList       TEXT[]
+        toList         TEXT[]
+        ccList         TEXT[]
+        attachmentList TEXT[]
+    }
+```

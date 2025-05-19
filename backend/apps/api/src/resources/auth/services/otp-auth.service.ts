@@ -1,7 +1,6 @@
 import {NotFoundError, TOtp, TOtpAuth, TUser} from '@cdoc/domain';
 import {Injectable} from '@nestjs/common';
 import {CommonEnv} from 'libs/common';
-import {CryptoService} from 'libs/crypto';
 import {DatabaseService, OtpEntity, UserEntity} from 'libs/database';
 import {StreamService, UserOtpUpdatedEvent} from 'libs/stream';
 import ms from 'ms';
@@ -10,7 +9,6 @@ import {EntityManager} from 'typeorm';
 @Injectable()
 export class OtpAuthService implements TOtpAuth {
   constructor(
-    private readonly cryptoService: CryptoService,
     private readonly commonEnv: CommonEnv,
     private readonly databaseService: DatabaseService,
     private readonly streamService: StreamService

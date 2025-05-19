@@ -8,7 +8,7 @@ export function StorageProvider(storageProvider: EStorageProvider): ClassDecorat
   };
 }
 export namespace StorageProvider {
-  export const key = Symbol('StorageProvider');
+  export const key = Symbol(StorageProvider.name);
   export const map = new Map<EStorageProvider, Function>();
   export const get = (kind: EStorageProvider): Function => map.get(kind)!;
 }

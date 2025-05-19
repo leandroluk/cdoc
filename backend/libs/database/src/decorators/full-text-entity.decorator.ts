@@ -15,7 +15,7 @@ export function FullTextEntity<T extends object>(
   };
 }
 export namespace FullTextEntity {
-  export const key = Symbol('FullTextEntity');
+  export const key = Symbol(FullTextEntity.name);
   export type Value<T extends object> = EntityOptions & {fullTextFields?: Array<StringKeys<T>>};
   export const get = <T extends object>(target: new (..._: any[]) => T): Array<StringKeys<T>> => {
     return (Reflect.getMetadata(key, target.prototype as object) as Value<T>['fullTextFields']) ?? [];

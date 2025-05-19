@@ -8,7 +8,7 @@ export function MailerProvider(kind: EMailerProvider): ClassDecorator {
   };
 }
 export namespace MailerProvider {
-  export const key = Symbol('MailerProvider');
+  export const key = Symbol(MailerProvider.name);
   export const map = new Map<EMailerProvider, Function>();
   export const get = (type: EMailerProvider): Function => map.get(type)!;
 }

@@ -8,8 +8,10 @@ import {StorageProvider} from './decorators';
 import {StorageEnv} from './storage.env';
 import {TStorageProvider} from './storage.types';
 
+type TStorageProviderWithoutConnect = Omit<TStorageProvider, 'connect'>;
+
 @Injectable()
-export class StorageProviderBus implements OnModuleInit, TStorageProvider {
+export class StorageProviderBus implements TStorageProviderWithoutConnect, OnModuleInit {
   constructor(
     private readonly storageEnv: StorageEnv,
     private readonly moduleRef: ModuleRef
@@ -20,10 +22,6 @@ export class StorageProviderBus implements OnModuleInit, TStorageProvider {
   }
 
   async onModuleInit(): Promise<void> {
-    await this.connect();
-  }
-
-  async connect(): Promise<void> {
     await this.provider.connect();
   }
 

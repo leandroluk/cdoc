@@ -4,8 +4,10 @@ import {QueueProvider} from './decorators';
 import {QueueEnv} from './queue.env';
 import {TQueueProvider} from './queue.types';
 
+type TQueueProviderWithoutConnect = Omit<TQueueProvider, 'connect'>;
+
 @Injectable()
-export class QueueProviderBus implements OnModuleInit, TQueueProvider {
+export class QueueProviderBus implements TQueueProviderWithoutConnect, OnModuleInit {
   constructor(
     private readonly queueEnv: QueueEnv,
     private readonly moduleRef: ModuleRef
@@ -16,10 +18,6 @@ export class QueueProviderBus implements OnModuleInit, TQueueProvider {
   }
 
   async onModuleInit(): Promise<void> {
-    await this.connect();
-  }
-
-  async connect(): Promise<void> {
     await this.provider.connect();
   }
 

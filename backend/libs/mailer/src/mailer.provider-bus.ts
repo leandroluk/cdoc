@@ -5,8 +5,10 @@ import {MailerProvider} from './decorators';
 import {MailerEnv} from './mailer.env';
 import {TMailerProvider} from './mailer.types';
 
+type TMailerProviderWithoutConnect = Omit<TMailerProvider, 'connect'>;
+
 @Injectable()
-export class MailerProviderBus implements TMailerProvider, OnModuleInit {
+export class MailerProviderBus implements TMailerProviderWithoutConnect, OnModuleInit {
   constructor(
     private readonly mailerEnv: MailerEnv,
     private readonly moduleRef: ModuleRef
@@ -17,10 +19,6 @@ export class MailerProviderBus implements TMailerProvider, OnModuleInit {
   }
 
   async onModuleInit(): Promise<void> {
-    await this.connect();
-  }
-
-  async connect(): Promise<void> {
     return await this.provider.connect();
   }
 

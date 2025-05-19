@@ -28,11 +28,15 @@ export class AwsQueueProvider implements TQueueProvider {
   }
 
   async connect(): Promise<void> {
-    await this.ping();
+    try {
+      await this.client.send(new ListQueuesCommand({}));
+    } catch (error) {
+      this.loggerService.error(`Failed to connect ${this.constructor.name}.`, error);
+      throw error;
+    }
   }
 
   async ping(): Promise<void> {
-    // // do a short receive to test
     try {
       await this.client.send(new ListQueuesCommand({}));
     } catch (error) {
